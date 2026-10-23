@@ -1,6 +1,4 @@
-# Current phase: 5 — Student exams and saved mistakes
-- [x] Exam folder browsing with premium locks and filter.
-- [x] MCQ instant feedback + explanation; creative show-answer + self-mark; graded in database.
-- [x] Result score + full review; wrong answers auto-saved; practice-again resolves mistakes.
+# Current phase: 6 — Student dashboard
+- [x] Today's points, Dhaka-day streak, weak topics (≥5 answers, <60%), saved-mistake count, continue-learning shortcut.
 - [ ] Signed-in end-to-end check — external Supabase session unavailable in workspace.
-- Next: phase 6 dashboard (waits for "continue").
+- Next: phase 7 settings/premium/blog (waits for "continue").
