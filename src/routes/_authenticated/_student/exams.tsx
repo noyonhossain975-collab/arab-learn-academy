@@ -1,21 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageHeader, ComingSoon } from "@/components/PageHeader";
+import { ExamHome } from "@/components/exams/ExamBrowser";
+import { LearningPending, LearningError } from "@/components/learning/LearningUI";
+import { examHead, examTreeOptions } from "@/lib/exams";
 
 export const Route = createFileRoute("/_authenticated/_student/exams")({
-  head: () => ({
-    meta: [
-      { title: "পরীক্ষা — Arab learn" },
-      { name: "description", content: "Arab learn — পরীক্ষা" },
-      { property: "og:title", content: "পরীক্ষা — Arab learn" },
-      { property: "og:description", content: "Arab learn — পরীক্ষা" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
-  component: () => (
-    <>
-      <PageHeader title="পরীক্ষা" />
-      <ComingSoon text="পরীক্ষার অংশ শীঘ্রই আসছে।" />
-    </>
-  ),
+  loader: ({ context }) => context.queryClient.ensureQueryData(examTreeOptions(context.user.id)),
+  head: () => examHead("পরীক্ষা", "বোর্ড পরীক্ষা, তাহকীক পরীক্ষা ও আরবি প্রশ্নব্যাংক অনুশীলন করুন।"),
+  pendingComponent: LearningPending, errorComponent: LearningError, component: ExamsPage,
 });
+function ExamsPage() { const { user } = Route.useRouteContext(); return <ExamHome userId={user.id} />; }
