@@ -18,6 +18,7 @@ import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authentic
 import { Route as AuthenticatedStudentExamsRouteImport } from './routes/_authenticated/_student/exams'
 import { Route as AuthenticatedStudentHomeRouteImport } from './routes/_authenticated/_student/home'
 import { Route as AuthenticatedStudentLearnRouteImport } from './routes/_authenticated/_student/learn'
+import { Route as AuthenticatedStudentMistakesRouteImport } from './routes/_authenticated/_student/mistakes'
 import { Route as AuthenticatedStudentSettingsRouteImport } from './routes/_authenticated/_student/settings'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminExamsRouteImport } from './routes/_authenticated/admin/exams'
@@ -25,6 +26,8 @@ import { Route as AuthenticatedAdminLessonsRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminManagementRouteImport } from './routes/_authenticated/admin/management'
 import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated/admin/reports'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
+import { Route as AuthenticatedStudentExamFoldersFolderIdRouteImport } from './routes/_authenticated/_student/exam-folders.$folderId'
+import { Route as AuthenticatedStudentExamFolderIdRouteImport } from './routes/_authenticated/_student/exam.$folderId'
 import { Route as AuthenticatedStudentLessonGroupsGroupIdRouteImport } from './routes/_authenticated/_student/lesson-groups.$groupId'
 import { Route as AuthenticatedStudentLessonsLessonIdRouteImport } from './routes/_authenticated/_student/lessons.$lessonId'
 import { Route as AuthenticatedStudentVocabularyTopicIdRouteImport } from './routes/_authenticated/_student/vocabulary.$topicId'
@@ -76,6 +79,12 @@ const AuthenticatedStudentLearnRoute =
     path: '/learn',
     getParentRoute: () => AuthenticatedStudentRouteRoute,
   } as any)
+const AuthenticatedStudentMistakesRoute =
+  AuthenticatedStudentMistakesRouteImport.update({
+    id: '/mistakes',
+    path: '/mistakes',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
 const AuthenticatedStudentSettingsRoute =
   AuthenticatedStudentSettingsRouteImport.update({
     id: '/settings',
@@ -116,6 +125,18 @@ const AuthenticatedAdminSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedStudentExamFoldersFolderIdRoute =
+  AuthenticatedStudentExamFoldersFolderIdRouteImport.update({
+    id: '/exam-folders/$folderId',
+    path: '/exam-folders/$folderId',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
+const AuthenticatedStudentExamFolderIdRoute =
+  AuthenticatedStudentExamFolderIdRouteImport.update({
+    id: '/exam/$folderId',
+    path: '/exam/$folderId',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
 const AuthenticatedStudentLessonGroupsGroupIdRoute =
   AuthenticatedStudentLessonGroupsGroupIdRouteImport.update({
     id: '/lesson-groups/$groupId',
@@ -143,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/exams': typeof AuthenticatedStudentExamsRoute
   '/home': typeof AuthenticatedStudentHomeRoute
   '/learn': typeof AuthenticatedStudentLearnRoute
+  '/mistakes': typeof AuthenticatedStudentMistakesRoute
   '/settings': typeof AuthenticatedStudentSettingsRoute
   '/admin/exams': typeof AuthenticatedAdminExamsRoute
   '/admin/lessons': typeof AuthenticatedAdminLessonsRoute
@@ -150,6 +172,8 @@ export interface FileRoutesByFullPath {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/exam-folders/$folderId': typeof AuthenticatedStudentExamFoldersFolderIdRoute
+  '/exam/$folderId': typeof AuthenticatedStudentExamFolderIdRoute
   '/lesson-groups/$groupId': typeof AuthenticatedStudentLessonGroupsGroupIdRoute
   '/lessons/$lessonId': typeof AuthenticatedStudentLessonsLessonIdRoute
   '/vocabulary/$topicId': typeof AuthenticatedStudentVocabularyTopicIdRoute
@@ -161,6 +185,7 @@ export interface FileRoutesByTo {
   '/exams': typeof AuthenticatedStudentExamsRoute
   '/home': typeof AuthenticatedStudentHomeRoute
   '/learn': typeof AuthenticatedStudentLearnRoute
+  '/mistakes': typeof AuthenticatedStudentMistakesRoute
   '/settings': typeof AuthenticatedStudentSettingsRoute
   '/admin/exams': typeof AuthenticatedAdminExamsRoute
   '/admin/lessons': typeof AuthenticatedAdminLessonsRoute
@@ -168,6 +193,8 @@ export interface FileRoutesByTo {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/exam-folders/$folderId': typeof AuthenticatedStudentExamFoldersFolderIdRoute
+  '/exam/$folderId': typeof AuthenticatedStudentExamFolderIdRoute
   '/lesson-groups/$groupId': typeof AuthenticatedStudentLessonGroupsGroupIdRoute
   '/lessons/$lessonId': typeof AuthenticatedStudentLessonsLessonIdRoute
   '/vocabulary/$topicId': typeof AuthenticatedStudentVocabularyTopicIdRoute
@@ -183,6 +210,7 @@ export interface FileRoutesById {
   '/_authenticated/_student/exams': typeof AuthenticatedStudentExamsRoute
   '/_authenticated/_student/home': typeof AuthenticatedStudentHomeRoute
   '/_authenticated/_student/learn': typeof AuthenticatedStudentLearnRoute
+  '/_authenticated/_student/mistakes': typeof AuthenticatedStudentMistakesRoute
   '/_authenticated/_student/settings': typeof AuthenticatedStudentSettingsRoute
   '/_authenticated/admin/exams': typeof AuthenticatedAdminExamsRoute
   '/_authenticated/admin/lessons': typeof AuthenticatedAdminLessonsRoute
@@ -190,6 +218,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/_student/exam-folders/$folderId': typeof AuthenticatedStudentExamFoldersFolderIdRoute
+  '/_authenticated/_student/exam/$folderId': typeof AuthenticatedStudentExamFolderIdRoute
   '/_authenticated/_student/lesson-groups/$groupId': typeof AuthenticatedStudentLessonGroupsGroupIdRoute
   '/_authenticated/_student/lessons/$lessonId': typeof AuthenticatedStudentLessonsLessonIdRoute
   '/_authenticated/_student/vocabulary/$topicId': typeof AuthenticatedStudentVocabularyTopicIdRoute
@@ -204,6 +234,7 @@ export interface FileRouteTypes {
     | '/exams'
     | '/home'
     | '/learn'
+    | '/mistakes'
     | '/settings'
     | '/admin/exams'
     | '/admin/lessons'
@@ -211,6 +242,8 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin/'
+    | '/exam-folders/$folderId'
+    | '/exam/$folderId'
     | '/lesson-groups/$groupId'
     | '/lessons/$lessonId'
     | '/vocabulary/$topicId'
@@ -222,6 +255,7 @@ export interface FileRouteTypes {
     | '/exams'
     | '/home'
     | '/learn'
+    | '/mistakes'
     | '/settings'
     | '/admin/exams'
     | '/admin/lessons'
@@ -229,6 +263,8 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin'
+    | '/exam-folders/$folderId'
+    | '/exam/$folderId'
     | '/lesson-groups/$groupId'
     | '/lessons/$lessonId'
     | '/vocabulary/$topicId'
@@ -243,6 +279,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_student/exams'
     | '/_authenticated/_student/home'
     | '/_authenticated/_student/learn'
+    | '/_authenticated/_student/mistakes'
     | '/_authenticated/_student/settings'
     | '/_authenticated/admin/exams'
     | '/_authenticated/admin/lessons'
@@ -250,6 +287,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/reports'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/'
+    | '/_authenticated/_student/exam-folders/$folderId'
+    | '/_authenticated/_student/exam/$folderId'
     | '/_authenticated/_student/lesson-groups/$groupId'
     | '/_authenticated/_student/lessons/$lessonId'
     | '/_authenticated/_student/vocabulary/$topicId'
@@ -327,6 +366,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentLearnRouteImport
       parentRoute: typeof AuthenticatedStudentRouteRoute
     }
+    '/_authenticated/_student/mistakes': {
+      id: '/_authenticated/_student/mistakes'
+      path: '/mistakes'
+      fullPath: '/mistakes'
+      preLoaderRoute: typeof AuthenticatedStudentMistakesRouteImport
+      parentRoute: typeof AuthenticatedStudentRouteRoute
+    }
     '/_authenticated/_student/settings': {
       id: '/_authenticated/_student/settings'
       path: '/settings'
@@ -376,6 +422,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/_student/exam-folders/$folderId': {
+      id: '/_authenticated/_student/exam-folders/$folderId'
+      path: '/exam-folders/$folderId'
+      fullPath: '/exam-folders/$folderId'
+      preLoaderRoute: typeof AuthenticatedStudentExamFoldersFolderIdRouteImport
+      parentRoute: typeof AuthenticatedStudentRouteRoute
+    }
+    '/_authenticated/_student/exam/$folderId': {
+      id: '/_authenticated/_student/exam/$folderId'
+      path: '/exam/$folderId'
+      fullPath: '/exam/$folderId'
+      preLoaderRoute: typeof AuthenticatedStudentExamFolderIdRouteImport
+      parentRoute: typeof AuthenticatedStudentRouteRoute
+    }
     '/_authenticated/_student/lesson-groups/$groupId': {
       id: '/_authenticated/_student/lesson-groups/$groupId'
       path: '/lesson-groups/$groupId'
@@ -404,7 +464,10 @@ interface AuthenticatedStudentRouteRouteChildren {
   AuthenticatedStudentExamsRoute: typeof AuthenticatedStudentExamsRoute
   AuthenticatedStudentHomeRoute: typeof AuthenticatedStudentHomeRoute
   AuthenticatedStudentLearnRoute: typeof AuthenticatedStudentLearnRoute
+  AuthenticatedStudentMistakesRoute: typeof AuthenticatedStudentMistakesRoute
   AuthenticatedStudentSettingsRoute: typeof AuthenticatedStudentSettingsRoute
+  AuthenticatedStudentExamFoldersFolderIdRoute: typeof AuthenticatedStudentExamFoldersFolderIdRoute
+  AuthenticatedStudentExamFolderIdRoute: typeof AuthenticatedStudentExamFolderIdRoute
   AuthenticatedStudentLessonGroupsGroupIdRoute: typeof AuthenticatedStudentLessonGroupsGroupIdRoute
   AuthenticatedStudentLessonsLessonIdRoute: typeof AuthenticatedStudentLessonsLessonIdRoute
   AuthenticatedStudentVocabularyTopicIdRoute: typeof AuthenticatedStudentVocabularyTopicIdRoute
@@ -415,7 +478,12 @@ const AuthenticatedStudentRouteRouteChildren: AuthenticatedStudentRouteRouteChil
     AuthenticatedStudentExamsRoute: AuthenticatedStudentExamsRoute,
     AuthenticatedStudentHomeRoute: AuthenticatedStudentHomeRoute,
     AuthenticatedStudentLearnRoute: AuthenticatedStudentLearnRoute,
+    AuthenticatedStudentMistakesRoute: AuthenticatedStudentMistakesRoute,
     AuthenticatedStudentSettingsRoute: AuthenticatedStudentSettingsRoute,
+    AuthenticatedStudentExamFoldersFolderIdRoute:
+      AuthenticatedStudentExamFoldersFolderIdRoute,
+    AuthenticatedStudentExamFolderIdRoute:
+      AuthenticatedStudentExamFolderIdRoute,
     AuthenticatedStudentLessonGroupsGroupIdRoute:
       AuthenticatedStudentLessonGroupsGroupIdRoute,
     AuthenticatedStudentLessonsLessonIdRoute:
