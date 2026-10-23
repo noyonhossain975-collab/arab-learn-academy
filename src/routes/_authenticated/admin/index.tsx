@@ -77,7 +77,7 @@ function AdminDashboard() {
             <div className="h-full animate-pulse rounded-lg bg-muted" />
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chart.data}>
+              <LineChart data={chart.data ?? []}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                 <XAxis dataKey="day" fontSize={12} />
                 <YAxis allowDecimals={false} fontSize={12} />
