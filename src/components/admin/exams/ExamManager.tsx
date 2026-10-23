@@ -12,7 +12,7 @@ import { BulkImport } from "@/components/admin/BulkImport";
 import { QuestionEditor } from "./QuestionEditor";
 import { allowsCreative, descendantIds, folderTrail, mcqColumns, creativeColumns, validateMcq, importQuestion } from "@/lib/exam-admin";
 
-export function ExamManager({ folderId, questionId, go }: { folderId?: string; questionId?: string; go: (folder?: string, question?: string) => void }) {
+export function ExamManager({ folderId, questionId, go }: { folderId?: string | undefined; questionId?: string | undefined; go: (folder?: string, question?: string) => void }) {
   const qc = useQueryClient();
   const [title, setTitle] = useState(""), [editing, setEditing] = useState<string | null>(null), [rename, setRename] = useState(""), [filter, setFilter] = useState("");
   const [recursive, setRecursive] = useState<Record<string, boolean>>({}), [busy, setBusy] = useState(false);
@@ -74,5 +74,5 @@ function Move({ index,count,busy,move }: { index:number; count:number; busy:bool
 }
 function QuestionImport({ folderId,type,order,onDone }: { folderId:string; type:"mcq"|"creative"; order:number; onDone:()=>void }) {
   const example = type === "mcq" ? { question_text:"كِتَابٌ শব্দের অর্থ কী?",option_1:"বই",option_2:"কলম",option_3:"ঘর",option_4:"দরজা",correct_option:"1",explanation:"كِتَابٌ অর্থ বই।" } : { stimulus:"একজন ছাত্র প্রতিদিন আরবি শেখে।",ka_question:"ইসম কী?",ka_answer:"নামবাচক শব্দ।",kha_question:"ফিল কী?",kha_answer:"ক্রিয়াবাচক শব্দ।",ga_question:"একটি উদাহরণ দাও।",ga_answer:"كَتَبَ",gha_question:"বাক্যে ব্যবহার করো।",gha_answer:"كَتَبَ الطَّالِبُ" };
-  return <BulkImport key={`${folderId}-${type}`} columns={type === "mcq" ? mcqColumns : creativeColumns} validate={type === "mcq" ? validateMcq : undefined} example={[example]} templateName={`arab-learn-${type}`} label={type === "mcq" ? "বহুনির্বাচনি আমদানি" : "সৃজনশীল আমদানি"} onDone={onDone} insertBatch={async (rows,start) => { const { error } = await supabase.rpc("admin_save_questions", { p_folder_id:folderId,p_questions:rows.map((r,i) => importQuestion(r,type,order+start+i,crypto.randomUUID())) }); if (error) throw error; }} />;
+  return <BulkImport key={`${folderId}-${type}`} columns={type === "mcq" ? mcqColumns : creativeColumns} validate={row => type === "mcq" ? validateMcq(row) : null} example={[example]} templateName={`arab-learn-${type}`} label={type === "mcq" ? "বহুনির্বাচনি আমদানি" : "সৃজনশীল আমদানি"} onDone={onDone} insertBatch={async (rows,start) => { const { error } = await supabase.rpc("admin_save_questions", { p_folder_id:folderId,p_questions:rows.map((r,i) => importQuestion(r,type,order+start+i,crypto.randomUUID())) }); if (error) throw error; }} />;
 }

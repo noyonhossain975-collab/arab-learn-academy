@@ -4,7 +4,7 @@ import { AdminTitle } from "@/components/admin/AdminUI";
 import { ExamManager } from "@/components/admin/exams/ExamManager";
 
 export const Route = createFileRoute("/_authenticated/admin/exams")({
-  validateSearch: (s: Record<string, unknown>): { folder?: string; question?: string } => ({ folder: typeof s.folder === "string" && s.folder ? s.folder : undefined, question: typeof s.question === "string" && s.question ? s.question : undefined }),
+  validateSearch: (s: Record<string, unknown>): { folder?: string | undefined; question?: string | undefined } => ({ folder: typeof s["folder"] === "string" && s["folder"] ? s["folder"] : undefined, question: typeof s["question"] === "string" && s["question"] ? s["question"] : undefined }),
   head: () => ({ meta: [
     { title: "পরীক্ষা ও প্রশ্ন পরিচালনা — Arab learn" },
     { name: "description", content: "Arab learn পরীক্ষার ফোল্ডার, বহুনির্বাচনি ও সৃজনশীল প্রশ্ন পরিচালনা।" },
