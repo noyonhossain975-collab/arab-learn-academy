@@ -36,7 +36,7 @@ export function LessonEditor({ groupId, lessonId, onBack }: { groupId: string; l
   }, [lesson.data]);
 
   async function save() {
-    if (!title.trim()) return toast.error("শিরোনাম লিখুন");
+    if (!title.trim()) { toast.error("শিরোনাম লিখুন"); return; }
     setSaving(true);
     const clean = sanitizeHtml(content);
     let error;
@@ -49,7 +49,7 @@ export function LessonEditor({ groupId, lessonId, onBack }: { groupId: string; l
       ({ error } = await supabase.from("lessons").update({ title: title.trim(), content: clean, is_published: published }).eq("id", lessonId));
     }
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("লেসন সংরক্ষণ হয়েছে");
     qc.invalidateQueries({ queryKey: ["admin"] });
     onBack();

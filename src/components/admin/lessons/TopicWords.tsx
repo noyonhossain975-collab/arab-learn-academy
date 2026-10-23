@@ -38,22 +38,22 @@ export function TopicWords({ topicId, onBack }: { topicId: string; onBack: () =>
   const list = q ? all.filter((w) => [w.arabic, w.meaning_bn, w.pronunciation_bn ?? ""].some((s) => s.includes(q))) : all;
 
   async function add() {
-    if (!draft.arabic.trim() || !draft.meaning_bn.trim()) return toast.error("আরবি শব্দ ও অর্থ লিখুন");
+    if (!draft.arabic.trim() || !draft.meaning_bn.trim()) { toast.error("আরবি শব্দ ও অর্থ লিখুন"); return; }
     const { error } = await supabase.from("vocab_words").insert({
       vocab_topic_id: topicId, arabic: draft.arabic.trim(), pronunciation_bn: draft.pronunciation_bn.trim() || null,
       meaning_bn: draft.meaning_bn.trim(), order_index: maxOrder + 1,
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setDraft(empty);
     refresh();
   }
 
   async function saveEdit(id: string) {
-    if (!edit.arabic.trim() || !edit.meaning_bn.trim()) return toast.error("আরবি শব্দ ও অর্থ লিখুন");
+    if (!edit.arabic.trim() || !edit.meaning_bn.trim()) { toast.error("আরবি শব্দ ও অর্থ লিখুন"); return; }
     const { error } = await supabase.from("vocab_words").update({
       arabic: edit.arabic.trim(), pronunciation_bn: edit.pronunciation_bn.trim() || null, meaning_bn: edit.meaning_bn.trim(),
     }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setEditing(null);
     refresh();
   }
