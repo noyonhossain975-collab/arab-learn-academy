@@ -857,6 +857,14 @@ export type Database = {
         Returns: undefined
       }
       admin_dashboard_stats: { Args: never; Returns: Json }
+      admin_save_questions: {
+        Args: { p_folder_id: string; p_questions: Json }
+        Returns: undefined
+      }
+      admin_set_folder_free: {
+        Args: { p_folder_id: string; p_is_free: boolean; p_recursive?: boolean }
+        Returns: undefined
+      }
       admin_set_subscription: {
         Args: {
           p_email: string
