@@ -62,13 +62,13 @@ export function BulkImport(props: BulkImportProps) {
   const reset = () => { setText(""); setParsed(null); setProgress(0); };
 
   function parse(src: string) {
-    if (!src.trim()) return toast.error("কোনো ডেটা নেই");
+    if (!src.trim()) { toast.error("কোনো ডেটা নেই"); return; }
     const { rows, missing } = parseImportText(src, props.columns, props.validate);
     if (missing.length) {
       toast.error(`প্রথম লাইনে এই কলামগুলো নেই: ${missing.join(", ")}`);
       return;
     }
-    if (!rows.length) return toast.error("কোনো সারি পাওয়া যায়নি");
+    if (!rows.length) { toast.error("কোনো সারি পাওয়া যায়নি"); return; }
     setParsed(rows);
   }
 
@@ -94,7 +94,7 @@ export function BulkImport(props: BulkImportProps) {
   const valid = parsed?.filter((p) => !p.error) ?? [];
 
   async function confirm() {
-    if (invalid.length && !skipInvalid) return toast.error("ভুল সারিগুলো ঠিক করুন অথবা 'ভুল সারি বাদ দাও' টিক দিন");
+    if (invalid.length && !skipInvalid) { toast.error("ভুল সারিগুলো ঠিক করুন অথবা 'ভুল সারি বাদ দাও' টিক দিন"); return; }
     setBusy(true);
     let added = 0;
     try {
