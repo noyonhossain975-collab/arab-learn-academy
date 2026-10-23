@@ -24,3 +24,4 @@
 - Reports share a reusable submission dialog and owner-scoped student list; admin triage uses RLS and invalidates report/badge queries after replies, while a database trigger restricts student updates to read state.
 - Site settings are split into contacts, WhatsApp and blog editors; only named non-secret payment settings are editable, and contact links use protocol validation before rendering.
 - Student learning uses distinct group, lesson and vocabulary routes with shared query options; lesson titles come from the lock-aware RPC and content stays RLS-filtered. Completion uses an atomic idempotent RPC; the last opened lesson is a user-scoped browser shortcut, not access authority.
+- Exam attempts are graded only by SECURITY DEFINER RPCs (start_exam/answer_question/finish_exam/practice_mistake) that check auth.uid() and can_access_folder; they also update daily_activity and saved_mistakes — so scores and mistakes come from one trusted path.
