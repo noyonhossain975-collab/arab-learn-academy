@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useId, useState, type FormEvent } from "react";
+import { cloneElement, isValidElement, useEffect, useId, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -146,7 +146,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   return (
     <div className="space-y-2">
       <Label htmlFor={id} className="text-base">{label}</Label>
-      <div id={`${id}-field`}>{React.isValidElement<{ id?: string }>(children) ? React.cloneElement(children, { id }) : children}</div>
+      <div id={`${id}-field`}>{isValidElement<{ id?: string }>(children) ? cloneElement(children, { id }) : children}</div>
     </div>
   );
 }
