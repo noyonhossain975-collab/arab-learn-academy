@@ -1,8 +1,9 @@
-# Current phase: 7 — Settings, premium and blog
-- [x] Profile name/photo and persisted light/dark/device theme.
-- [x] Plan list, subscription status and manual WhatsApp purchase requests.
-- [x] Published blog list/detail and community links.
-- [x] Ten tests passed; signed-out desktop/mobile checks show login gating without runtime errors.
+# Current phase: 8 — Final polish and documentation
+- [ ] Polish public login/reset/error screens and responsive student layout.
+- [ ] Complete Google sign-in button and safe public return handling.
+- [ ] Run regression tests and browser checks.
+- [ ] Write Bengali setup, administration, security and publishing guide.
 - [ ] Signed-in end-to-end check — external unmanaged Supabase session unavailable.
 - [ ] Live WhatsApp purchase check — admin must replace the placeholder number with a real number.
-- Next: phase 8 polish/documentation (waits for "continue").
+- [ ] Google provider and hosted auth settings verification — external Supabase configuration unavailable.
+- Publishing waits for an explicit publish request.
