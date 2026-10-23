@@ -15,3 +15,4 @@
 - Exam content is a self-referencing `exam_folders` tree with 3 system roots (`root_key`); creative questions only allowed under `board_past` (DB trigger).
 - Admin writes use the normal signed-in client + RLS + admin RPCs; no service-role key in the browser.
 - "Day" is Asia/Dhaka via `dhaka_today()`; `touch_last_seen()` creates the daily_activity row on app open.
+- Signed-in student pages live under `src/routes/_authenticated/` (client-only gate, shared bottom nav in its layout) — keeps auth in one place.
