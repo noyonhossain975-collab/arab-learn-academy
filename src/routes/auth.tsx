@@ -134,6 +134,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function translate(msg: string) {
   if (/invalid login/i.test(msg)) return "ইমেইল বা পাসওয়ার্ড ভুল";
   if (/already registered/i.test(msg)) return "এই ইমেইল দিয়ে আগেই অ্যাকাউন্ট খোলা হয়েছে";
+  if (/is invalid/i.test(msg)) return "ইমেইল ঠিকানাটি সঠিক নয়";
   if (/not confirmed/i.test(msg)) return "ইমেইল এখনো নিশ্চিত করা হয়নি — ইনবক্স দেখুন";
   return msg;
 }
