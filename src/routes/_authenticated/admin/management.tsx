@@ -28,7 +28,7 @@ function Management() {
     <>
       <AdminTitle title="ম্যানেজমেন্ট" />
       <Tabs defaultValue="subs">
-        <TabsList>
+        <TabsList className="grid h-auto w-full grid-cols-3 md:w-fit">
           <TabsTrigger value="subs">সাবস্ক্রিপশন</TabsTrigger>
           <TabsTrigger value="students">ছাত্র তালিকা</TabsTrigger>
           <TabsTrigger value="plans">প্ল্যান</TabsTrigger>
