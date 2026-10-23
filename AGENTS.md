@@ -8,3 +8,10 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Architecture rules
+- Roles live in `public.user_roles` (checked via `is_admin()`/`has_role()`), never on profiles — prevents self-promotion via profile updates.
+- Premium locking is enforced by RLS using `can_access_lesson/can_access_vocab_topic/can_access_folder`; locked lesson titles come from `get_group_lessons()` RPC — so free users can never fetch premium content directly.
+- Exam content is a self-referencing `exam_folders` tree with 3 system roots (`root_key`); creative questions only allowed under `board_past` (DB trigger).
+- Admin writes use the normal signed-in client + RLS + admin RPCs; no service-role key in the browser.
+- "Day" is Asia/Dhaka via `dhaka_today()`; `touch_last_seen()` creates the daily_activity row on app open.
