@@ -4,7 +4,7 @@ import { LearningPending,LearningError } from "@/components/learning/LearningUI"
 import { catalogOptions } from "@/lib/learning";
 
 export const Route = createFileRoute("/_authenticated/_student/learn")({
-  loader: ({context})=>context.queryClient.ensureQueryData(catalogOptions(context.user.id)),
+  loader: ({context})=>context.queryClient.fetchQuery(catalogOptions(context.user.id)),
   pendingComponent: LearningPending,
   errorComponent: LearningError,
   head: () => ({

@@ -13,14 +13,14 @@ export const groupOptions=(groupId:string,userId:string)=>queryOptions({queryKey
  const [group,lessons]=await Promise.all([supabase.from("lesson_groups").select("*").eq("id",groupId).eq("is_published",true).maybeSingle(),supabase.rpc("get_group_lessons",{p_group_id:groupId})]);
  if(group.error)throw group.error;if(lessons.error)throw lessons.error;return {group:group.data,lessons:lessons.data};
 }});
-export const lessonOptions=(lessonId:string,userId:string)=>queryOptions({queryKey:["learning","lesson",lessonId,userId],queryFn:async()=>{
+export const lessonOptions=(lessonId:string,userId:string)=>queryOptions({queryKey:["learning","lesson",lessonId,userId],staleTime:0,gcTime:0,refetchOnWindowFocus:"always",queryFn:async()=>{
  // Direct content reads remain RLS protected, even after a previously unlocked page expires.
  const {data,error}=await supabase.from("lessons").select("*").eq("id",lessonId).eq("is_published",true).maybeSingle();
  if(error)throw error;if(!data)return null;
  const summary=await supabase.rpc("get_group_lessons",{p_group_id:data.group_id});if(summary.error)throw summary.error;
  return {lesson:data,lessons:summary.data};
 }});
-export const vocabularyOptions=(topicId:string,userId:string)=>queryOptions({queryKey:["learning","vocabulary",topicId,userId],queryFn:async()=>{
+export const vocabularyOptions=(topicId:string,userId:string)=>queryOptions({queryKey:["learning","vocabulary",topicId,userId],staleTime:0,gcTime:0,refetchOnWindowFocus:"always",queryFn:async()=>{
  const [topic,access]=await Promise.all([supabase.from("vocab_topics").select("*").eq("id",topicId).eq("is_published",true).maybeSingle(),supabase.rpc("can_access_vocab_topic",{_user_id:userId,_topic_id:topicId})]);
  if(topic.error)throw topic.error;if(access.error)throw access.error;
  if(!topic.data||!access.data)return {topic:topic.data,locked:!!topic.data,words:[]};

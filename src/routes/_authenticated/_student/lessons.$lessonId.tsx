@@ -3,7 +3,7 @@ import { LessonReader } from "@/components/learning/LessonReader";
 import { LearningPending,LearningError } from "@/components/learning/LearningUI";
 import { lessonOptions,learningHead } from "@/lib/learning";
 export const Route=createFileRoute("/_authenticated/_student/lessons/$lessonId")({
- loader:({params,context})=>context.queryClient.ensureQueryData(lessonOptions(params.lessonId,context.user.id)),
+ loader:({params,context})=>context.queryClient.fetchQuery(lessonOptions(params.lessonId,context.user.id)),
  head:({loaderData})=>learningHead(loaderData?.lesson.title??"আরবি পাঠ","Arab learn-এর বাংলা ও আরবি পাঠ পড়ুন।"),
  pendingComponent:LearningPending,errorComponent:LearningError,component:LessonPage,
 });
