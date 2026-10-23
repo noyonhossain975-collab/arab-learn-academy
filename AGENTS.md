@@ -19,3 +19,5 @@
 - Content images live in the private `content-images` bucket (workspace blocks public buckets); embed long-lived signed URLs via `src/lib/upload.ts`.
 - All admin CSV/paste imports go through `src/components/admin/BulkImport.tsx` (`parseImportText` is unit-tested) — one parser for every content type.
 - Rich content is stored as sanitized HTML (`src/lib/content.ts`); render with the `.lesson-content` class.
+- Exam admin navigation uses folder/question search parameters and focused exam components; saves/import batches use admin-checked invoker RPCs to keep questions and child answers atomic while preserving existing answer identifiers.
+- Admin leaf routes use shared metadata defaults with distinct page titles and descriptions so private administration pages have complete, consistent head tags.
