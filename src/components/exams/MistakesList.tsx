@@ -14,7 +14,7 @@ function Practice({ q, userId, onDone }: { q: ExamQuestion; userId: string; onDo
   const qc = useQueryClient();
   const [results, setResults] = useState<Record<string, AnswerResult>>({});
   const submit: SubmitAnswer = async ({ optionId, partId, selfCorrect }) => {
-    const { data, error } = await supabase.rpc("practice_mistake", { p_question_id: q.id, p_option_id: optionId, p_part_id: partId, p_self_correct: selfCorrect });
+    const { data, error } = await supabase.rpc("practice_mistake", { p_question_id: q.id, ...(optionId && { p_option_id: optionId }), ...(partId && { p_part_id: partId }), ...(selfCorrect !== undefined && { p_self_correct: selfCorrect }) });
     if (error) { toast.error(error.message); return false; }
     setResults({ [answerKey(q.id, partId)]: { ok: !!data, optionId } });
     toast[data ? "success" : "error"](data ? "সঠিক! ভুলটি সমাধান হলো" : "আবার ভুল হয়েছে, পরে আবার চেষ্টা করুন");

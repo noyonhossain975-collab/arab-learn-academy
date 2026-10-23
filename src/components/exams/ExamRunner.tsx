@@ -28,7 +28,7 @@ export function ExamRunner({ folderId, userId }: { folderId: string; userId: str
   const total = examTotal(questions), q = questions[index]!;
   const submit: SubmitAnswer = async ({ optionId, partId, selfCorrect }) => {
     if (!attemptId) { toast.error("পরীক্ষা শুরু হচ্ছে, একটু অপেক্ষা করুন"); return false; }
-    const { data, error } = await supabase.rpc("answer_question", { p_attempt_id: attemptId, p_question_id: q.id, p_option_id: optionId, p_part_id: partId, p_self_correct: selfCorrect });
+    const { data, error } = await supabase.rpc("answer_question", { p_attempt_id: attemptId, p_question_id: q.id, ...(optionId && { p_option_id: optionId }), ...(partId && { p_part_id: partId }), ...(selfCorrect !== undefined && { p_self_correct: selfCorrect }) });
     if (error) { toast.error(error.message); return false; }
     const ok = !!data, marks = partId ? q.creative_parts.find(p => p.id === partId)?.marks ?? 0 : 1;
     setResults(r => ({ ...r, [answerKey(q.id, partId)]: { ok, optionId } }));

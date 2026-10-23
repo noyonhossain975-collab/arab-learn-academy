@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { answerKey, partLabel, type ExamQuestion } from "@/lib/exams";
 import { cn } from "@/lib/utils";
 
-export type AnswerResult = { ok: boolean; optionId?: string };
-export type SubmitAnswer = (a: { optionId?: string; partId?: string; selfCorrect?: boolean }) => Promise<boolean>;
+export type AnswerResult = { ok: boolean; optionId?: string | undefined };
+export type SubmitAnswer = (a: { optionId?: string | undefined; partId?: string | undefined; selfCorrect?: boolean | undefined }) => Promise<boolean>;
 
 /** One MCQ or creative question. MCQ shows instant feedback; creative parts reveal the model answer then self-mark. */
 export function QuestionView({ q, results, onSubmit, review = false, singlePart = false }: { q: ExamQuestion; results: Record<string, AnswerResult>; onSubmit?: SubmitAnswer; review?: boolean; singlePart?: boolean }) {
