@@ -27,3 +27,4 @@
 - Exam attempts are graded only by SECURITY DEFINER RPCs (start_exam/answer_question/finish_exam/practice_mistake) that check auth.uid() and can_access_folder; they also update daily_activity and saved_mistakes — so scores and mistakes come from one trusted path.
 - Student settings use shared user-scoped profile/premium queries and a root theme controller; WhatsApp links use current admin settings without granting subscriptions, while profile photos use owner-only private Storage paths.
 - Student blog reading lives in distinct list/detail routes and fetches only published posts; detail content is sanitized before rendering.
+- External Supabase Google OAuth and email confirmations return to the public auth page; session hydration navigates to the fixed student home destination to avoid protected callback loops and open redirects.

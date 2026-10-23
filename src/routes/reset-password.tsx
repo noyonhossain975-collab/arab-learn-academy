@@ -33,14 +33,13 @@ function ResetPassword() {
       return;
     }
     setBusy(true);
-    const { error } = await supabase.auth.updateUser({ password });
-    setBusy(false);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    toast.success("পাসওয়ার্ড পরিবর্তন হয়েছে");
-    navigate({ to: "/home", replace: true });
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) throw error;
+      toast.success("পাসওয়ার্ড পরিবর্তন হয়েছে");
+      navigate({ to: "/home", replace: true });
+    } catch { toast.error("পাসওয়ার্ড বদলানো যায়নি। রিসেট লিংক আবার নিয়ে চেষ্টা করুন।"); }
+    finally { setBusy(false); }
   }
 
   return (
