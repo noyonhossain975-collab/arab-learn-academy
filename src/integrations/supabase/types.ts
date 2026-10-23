@@ -911,6 +911,7 @@ export type Database = {
         Args: { _topic_id: string; _user_id: string }
         Returns: boolean
       }
+      complete_lesson: { Args: { p_lesson_id: string }; Returns: undefined }
       dhaka_today: { Args: never; Returns: string }
       folder_root_key: { Args: { _folder_id: string }; Returns: string }
       get_group_lessons: {

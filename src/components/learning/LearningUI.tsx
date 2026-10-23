@@ -1,0 +1,7 @@
+import { Link } from "@tanstack/react-router";
+import { LockKeyhole,ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+export function LockedContent(){return <div className="flex flex-col items-center gap-4 py-12 text-center"><LockKeyhole className="h-10 w-10 text-muted-foreground"/><h2 className="text-xl font-bold">এই পাঠটি প্রিমিয়াম</h2><p className="max-w-sm text-muted-foreground">সব পাঠ ও শব্দভান্ডার পড়তে প্রিমিয়াম নিন।</p><Button asChild><Link to="/settings">প্রিমিয়াম সম্পর্কে জানো</Link></Button></div>;}
+export function BackToLearn(){return <Button variant="ghost" size="sm" asChild><Link to="/learn"><ArrowLeft className="h-4 w-4"/>লেসন</Link></Button>;}
+export function LearningPending(){return <div className="space-y-4 p-5" aria-label="লোড হচ্ছে"><div className="h-10 w-2/3 animate-pulse rounded-lg bg-muted"/>{[1,2,3].map(i=><div key={i} className="h-24 animate-pulse rounded-lg bg-muted"/>)}</div>;}
+export function LearningError({reset}:{reset:()=>void}){return <div className="space-y-4 p-8 text-center"><p className="text-destructive">পাঠ লোড হয়নি। আবার চেষ্টা করুন।</p><Button variant="outline" onClick={reset}>আবার চেষ্টা করো</Button><BackToLearn/></div>;}

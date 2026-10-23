@@ -183,4 +183,14 @@
   .lesson-content th { background: var(--muted); font-weight: 600; }
   .lesson-content [dir="rtl"] { font-family: var(--font-arabic); font-size: 1.25em; line-height: 2; }
   .lesson-content .selectedCell { background: var(--accent); }
+  .lesson-reader { overflow-x: auto; }
+  .lesson-reader table { min-width: 24rem; }
+  .lesson-reader p, .lesson-reader li { unicode-bidi: plaintext; }
+  .learning-progress { appearance: none; border: none; border-radius: 999px; overflow: hidden; background: var(--muted); color: var(--primary); }
+  .learning-progress::-webkit-progress-bar { background: var(--muted); }
+  .learning-progress::-webkit-progress-value { background: var(--primary); }
+  .learning-progress::-moz-progress-bar { background: var(--primary); }
+  .flashcard { min-height: 22rem; touch-action: pan-y; transition: background-color 180ms ease; }
+  .flashcard-main { min-height: 8rem; display: flex; align-items: center; justify-content: center; }
+  @media (prefers-reduced-motion: reduce) { .flashcard { transition: none; } }
 }
