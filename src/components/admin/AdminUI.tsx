@@ -9,7 +9,7 @@ export function AdminTitle({ title, children }: { title: string; children?: Reac
   );
 }
 
-export function AdminCard({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function AdminCard({ children, className = "" }: { children?: ReactNode; className?: string }) {
   return <div className={`rounded-xl border border-border bg-card p-5 shadow-sm ${className}`}>{children}</div>;
 }
 

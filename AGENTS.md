@@ -16,3 +16,6 @@
 - Admin writes use the normal signed-in client + RLS + admin RPCs; no service-role key in the browser.
 - "Day" is Asia/Dhaka via `dhaka_today()`; `touch_last_seen()` creates the daily_activity row on app open.
 - Signed-in student pages live under `src/routes/_authenticated/` (client-only gate, shared bottom nav in its layout) — keeps auth in one place.
+- Content images live in the private `content-images` bucket (workspace blocks public buckets); embed long-lived signed URLs via `src/lib/upload.ts`.
+- All admin CSV/paste imports go through `src/components/admin/BulkImport.tsx` (`parseImportText` is unit-tested) — one parser for every content type.
+- Rich content is stored as sanitized HTML (`src/lib/content.ts`); render with the `.lesson-content` class.
