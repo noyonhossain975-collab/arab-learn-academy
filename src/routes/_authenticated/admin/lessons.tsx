@@ -5,10 +5,12 @@ import { GroupLessons } from "@/components/admin/lessons/GroupLessons";
 import { LessonEditor } from "@/components/admin/lessons/LessonEditor";
 import { VocabTopics } from "@/components/admin/lessons/VocabTopics";
 import { TopicWords } from "@/components/admin/lessons/TopicWords";
+import { adminHead } from "@/lib/admin-head";
 
 type Search = { tab: "arabic" | "vocab"; group?: string; lesson?: string; topic?: string };
 
 export const Route = createFileRoute("/_authenticated/admin/lessons")({
+  head: () => adminHead("লেসন পরিচালনা", "Arab learn আরবি পাঠ ও শব্দভান্ডার পরিচালনা।"),
   validateSearch: (s: Record<string, unknown>): Search => {
     const str = (v: unknown) => (typeof v === "string" && v ? v : undefined);
     const out: Search = { tab: s["tab"] === "vocab" ? "vocab" : "arabic" };

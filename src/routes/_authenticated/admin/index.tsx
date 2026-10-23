@@ -4,8 +4,10 @@ import { useState } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminCard, AdminTitle } from "@/components/admin/AdminUI";
+import { adminHead } from "@/lib/admin-head";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
+  head: () => adminHead("ড্যাশবোর্ড", "Arab learn ছাত্রদের নিবন্ধন, সক্রিয়তা ও সাবস্ক্রিপশনের সারসংক্ষেপ।"),
   component: AdminDashboard,
 });
 

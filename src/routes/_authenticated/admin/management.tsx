@@ -9,8 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { adminHead } from "@/lib/admin-head";
 
 export const Route = createFileRoute("/_authenticated/admin/management")({
+  head: () => adminHead("ম্যানেজমেন্ট", "Arab learn ছাত্র, প্রিমিয়াম প্ল্যান ও সাবস্ক্রিপশন পরিচালনা।"),
   component: Management,
 });
 
