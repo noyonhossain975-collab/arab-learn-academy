@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { BookOpen, FileText, Home, Settings } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
-// 4 tabs only. Space for a future "AI" tab is left in the layout, not shown.
+// Keep exactly four student destinations.
 const items = [
   { to: "/home", label: "হোম", icon: Home },
   { to: "/learn", label: "লেসন", icon: BookOpen },
@@ -16,7 +16,7 @@ export function BottomNav() {
       <div className="hidden px-5 py-6 md:block">
         <Logo className="justify-start" />
       </div>
-      <div className="mx-auto flex max-w-md justify-around px-2 py-2 md:mx-0 md:max-w-none md:flex-col md:gap-2 md:px-3">
+      <div className="mx-auto flex max-w-md justify-around px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:mx-0 md:max-w-none md:flex-col md:gap-2 md:px-3 md:pb-2">
         {items.map((it) => (
           <Link
             key={it.to}

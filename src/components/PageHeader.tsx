@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 
 export function PageHeader({ title, right }: { title: string; right?: ReactNode }) {
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b-2 border-border bg-background px-5 py-4">
-      <h1 className="text-xl font-bold text-foreground">{title}</h1>
+    <header className="sticky top-0 z-30 flex min-w-0 items-center justify-between gap-3 border-b-2 border-border bg-background px-5 py-4">
+      <h1 dir="auto" className="min-w-0 break-words text-xl font-bold text-foreground">{title}</h1>
       {right}
     </header>
   );
