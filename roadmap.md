@@ -1,4 +1,6 @@
-# Current phase: 6 — Student dashboard
-- [x] Today's points, Dhaka-day streak, weak topics (≥5 answers, <60%), saved-mistake count, continue-learning shortcut.
-- [ ] Signed-in end-to-end check — external Supabase session unavailable in workspace.
-- Next: phase 7 settings/premium/blog (waits for "continue").
+# Current phase: 7 — Settings, premium and blog
+- [ ] Profile name/photo and persisted light/dark/device theme.
+- [ ] Plan list, subscription status and manual WhatsApp purchase requests.
+- [ ] Published blog list/detail and community links.
+- [ ] Tests and visual checks; signed-in end-to-end check depends on external Supabase access.
+- Next: phase 8 polish/documentation (waits for "continue").
