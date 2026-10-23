@@ -5,6 +5,7 @@ import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, X
 import { supabase } from "@/integrations/supabase/client";
 import { AdminCard, AdminTitle } from "@/components/admin/AdminUI";
 import { adminHead } from "@/lib/admin-head";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   head: () => adminHead("ড্যাশবোর্ড", "Arab learn ছাত্রদের নিবন্ধন, সক্রিয়তা ও সাবস্ক্রিপশনের সারসংক্ষেপ।"),
@@ -64,19 +65,21 @@ function AdminDashboard() {
           <h2 className="font-semibold">নিবন্ধন ও সক্রিয় ছাত্র</h2>
           <div className="flex gap-1 rounded-lg bg-muted p-1">
             {[7, 30, 90].map((d) => (
-              <button
+              <Button variant={days === d ? "secondary" : "ghost"} size="sm" aria-pressed={days === d}
                 key={d}
                 onClick={() => setDays(d)}
                 className={`rounded-md px-3 py-1 text-sm ${days === d ? "bg-background font-semibold shadow-sm" : "text-muted-foreground"}`}
               >
                 {d.toLocaleString("bn-BD")} দিন
-              </button>
+              </Button>
             ))}
           </div>
         </div>
         <div className="h-72">
           {chart.isLoading ? (
             <div className="h-full animate-pulse rounded-lg bg-muted" />
+          ) : chart.error ? (
+            <div role="alert" className="flex h-full flex-col items-center justify-center gap-3 text-destructive"><p>চার্টের তথ্য লোড হয়নি</p><Button variant="outline" onClick={() => chart.refetch()}>আবার চেষ্টা করুন</Button></div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chart.data ?? []}>
@@ -92,7 +95,7 @@ function AdminDashboard() {
           )}
         </div>
       </AdminCard>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+      {stats.error ? <div role="alert" className="flex flex-wrap items-center gap-3 text-destructive"><p>হিসাব লোড হয়নি</p><Button variant="outline" onClick={() => stats.refetch()}>আবার চেষ্টা করুন</Button></div> : <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
         {cards.map((c) => (
           <AdminCard key={c.key}>
             <p className="text-sm text-muted-foreground">{c.label}</p>
@@ -101,7 +104,7 @@ function AdminDashboard() {
             </p>
           </AdminCard>
         ))}
-      </div>
+      </div>}
     </>
   );
 }

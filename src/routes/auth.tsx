@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { cloneElement, isValidElement, useEffect, useId, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/Logo";
+import { Button } from "@/components/ui/button";
 
 type Mode = "login" | "signup" | "forgot";
 
@@ -35,6 +36,23 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState<string | null>(null);
 
+  useEffect(() => {
+    let active = true;
+    void supabase.auth.getSession().then(({ data }) => {
+      if (active && data.session) void navigate({ to: "/home", replace: true });
+    });
+    return () => { active = false; };
+  }, [navigate]);
+
+  async function googleLogin() {
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/auth?mode=login` } });
+      if (error) throw error;
+    } catch { toast.error("Google দিয়ে লগইন শুরু হয়নি। আবার চেষ্টা করুন।"); }
+    finally { setBusy(false); }
+  }
+
   const setMode = (m: Mode) => navigate({ to: "/auth", search: { mode: m }, replace: true });
 
   async function submit(e: FormEvent) {
@@ -50,7 +68,7 @@ function AuthPage() {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + "/home", data: { full_name: name } },
+          options: { emailRedirectTo: window.location.origin + "/auth?mode=login", data: { full_name: name.trim() } },
         });
         if (error) throw error;
         if (data.session) navigate({ to: "/home", replace: true });
@@ -81,41 +99,42 @@ function AuthPage() {
       {sent ? (
         <div className="mt-8 rounded-2xl border-2 border-primary bg-secondary p-5 text-center text-secondary-foreground">
           {sent}
-          <button onClick={() => { setSent(null); setMode("login"); }} className="mt-4 block w-full font-bold text-primary">
+          <Button variant="link" onClick={() => { setSent(null); setMode("login"); }} className="mt-4 w-full font-bold">
             লগইন পেজে ফিরে যান
-          </button>
+          </Button>
         </div>
       ) : (
         <form onSubmit={submit} className="mt-8 space-y-4">
           {mode === "signup" && (
             <Field label="আপনার নাম">
-              <Input required value={name} onChange={(e) => setName(e.target.value)} className="h-12 rounded-xl border-2" />
+              <Input autoComplete="name" required maxLength={100} value={name} onChange={(e) => setName(e.target.value)} className="h-12 rounded-xl border-2" />
             </Field>
           )}
           <Field label="ইমেইল">
-            <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 rounded-xl border-2" />
+            <Input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12 rounded-xl border-2" />
           </Field>
           {mode !== "forgot" && (
             <Field label="পাসওয়ার্ড">
-              <Input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-12 rounded-xl border-2" />
+              <Input type="password" autoComplete={mode === "signup" ? "new-password" : "current-password"} minLength={mode === "signup" ? 6 : undefined} required value={password} onChange={(e) => setPassword(e.target.value)} className="h-12 rounded-xl border-2" />
             </Field>
           )}
           {mode === "login" && (
-            <button type="button" onClick={() => setMode("forgot")} className="text-sm font-semibold text-primary">
+            <Button variant="link" type="button" onClick={() => setMode("forgot")} className="h-auto px-0 text-sm font-semibold">
               পাসওয়ার্ড ভুলে গেছেন?
-            </button>
+            </Button>
           )}
-          <button disabled={busy} className="btn-3d w-full rounded-2xl bg-primary py-4 text-lg font-bold text-primary-foreground disabled:opacity-60">
+          <Button type="submit" disabled={busy} className="btn-3d h-auto w-full whitespace-normal rounded-2xl py-4 text-lg font-bold">
             {busy ? "অপেক্ষা করুন..." : buttons[mode]}
-          </button>
+          </Button>
+          {mode !== "forgot" && <Button type="button" variant="outline" disabled={busy} onClick={googleLogin} className="h-auto w-full rounded-2xl border-2 py-3 font-bold"><span aria-hidden="true" className="font-serif text-xl">G</span>Google দিয়ে লগইন</Button>}
         </form>
       )}
 
       <p className="mt-8 text-center text-muted-foreground">
         {mode === "signup" ? (
-          <>অ্যাকাউন্ট আছে? <button onClick={() => setMode("login")} className="font-bold text-primary">লগইন করুন</button></>
+          <>অ্যাকাউন্ট আছে? <Button variant="link" onClick={() => { setSent(null); setMode("login"); }} className="px-1 font-bold">লগইন করুন</Button></>
         ) : (
-          <>নতুন? <button onClick={() => setMode("signup")} className="font-bold text-primary">অ্যাকাউন্ট খুলুন</button></>
+          <>নতুন? <Button variant="link" onClick={() => { setSent(null); setMode("signup"); }} className="px-1 font-bold">অ্যাকাউন্ট খুলুন</Button></>
         )}
       </p>
     </div>
@@ -123,10 +142,11 @@ function AuthPage() {
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  const id = useId();
   return (
     <div className="space-y-2">
-      <Label className="text-base">{label}</Label>
-      {children}
+      <Label htmlFor={id} className="text-base">{label}</Label>
+      <div id={`${id}-field`}>{isValidElement<{ id?: string }>(children) ? cloneElement(children, { id }) : children}</div>
     </div>
   );
 }
@@ -136,5 +156,8 @@ function translate(msg: string) {
   if (/already registered/i.test(msg)) return "এই ইমেইল দিয়ে আগেই অ্যাকাউন্ট খোলা হয়েছে";
   if (/is invalid/i.test(msg)) return "ইমেইল ঠিকানাটি সঠিক নয়";
   if (/not confirmed/i.test(msg)) return "ইমেইল এখনো নিশ্চিত করা হয়নি — ইনবক্স দেখুন";
-  return msg;
+  if (/rate limit|too many/i.test(msg)) return "অনেকবার চেষ্টা হয়েছে। একটু পরে আবার চেষ্টা করুন।";
+  if (/network|fetch/i.test(msg)) return "ইন্টারনেট সংযোগ দেখুন, তারপর আবার চেষ্টা করুন।";
+  if (/পাসওয়ার্ড/.test(msg)) return msg;
+  return "কাজটি হয়নি। আবার চেষ্টা করুন।";
 }

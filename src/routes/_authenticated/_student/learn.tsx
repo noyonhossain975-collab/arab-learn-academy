@@ -10,9 +10,9 @@ export const Route = createFileRoute("/_authenticated/_student/learn")({
   head: () => ({
     meta: [
       { title: "লেসন — Arab learn" },
-      { name: "description", content: "Arab learn — শিখুন" },
+      { name: "description", content: "নাহু, সরফ, কায়দার পাঠ ও বিষয়ভিত্তিক আরবি শব্দভান্ডার পড়ুন।" },
       { property: "og:title", content: "লেসন — Arab learn" },
-      { property: "og:description", content: "Arab learn — শিখুন" },
+      { property: "og:description", content: "নাহু, সরফ, কায়দার পাঠ ও বিষয়ভিত্তিক আরবি শব্দভান্ডার পড়ুন।" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

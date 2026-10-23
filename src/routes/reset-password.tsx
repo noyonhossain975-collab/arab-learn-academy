@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/Logo";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/reset-password")({
   ssr: false,
@@ -32,14 +33,13 @@ function ResetPassword() {
       return;
     }
     setBusy(true);
-    const { error } = await supabase.auth.updateUser({ password });
-    setBusy(false);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    toast.success("পাসওয়ার্ড পরিবর্তন হয়েছে");
-    navigate({ to: "/home", replace: true });
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) throw error;
+      toast.success("পাসওয়ার্ড পরিবর্তন হয়েছে");
+      navigate({ to: "/home", replace: true });
+    } catch { toast.error("পাসওয়ার্ড বদলানো যায়নি। রিসেট লিংক আবার নিয়ে চেষ্টা করুন।"); }
+    finally { setBusy(false); }
   }
 
   return (
@@ -47,10 +47,10 @@ function ResetPassword() {
       <Logo />
       <h1 className="mt-10 text-center text-2xl font-bold">নতুন পাসওয়ার্ড দিন</h1>
       <form onSubmit={submit} className="mt-8 space-y-4">
-        <Input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="নতুন পাসওয়ার্ড" className="h-12 rounded-xl border-2" />
-        <button disabled={busy} className="btn-3d w-full rounded-2xl bg-primary py-4 text-lg font-bold text-primary-foreground disabled:opacity-60">
+        <Input aria-label="নতুন পাসওয়ার্ড" type="password" autoComplete="new-password" minLength={6} required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="নতুন পাসওয়ার্ড" className="h-12 rounded-xl border-2" />
+        <Button type="submit" disabled={busy} className="btn-3d h-auto w-full rounded-2xl py-4 text-lg font-bold">
           সংরক্ষণ করুন
-        </button>
+        </Button>
       </form>
     </div>
   );

@@ -36,13 +36,13 @@ export const dashboardOptions = (userId: string) => queryOptions({
     const todayRow = rows.find(r => r.activity_date === t);
     const studied = rows.filter(r => r.lessons_completed > 0 || r.questions_answered > 0).map(r => r.activity_date);
     type A = { is_correct: boolean; question: { folder_id: string } | null };
-    const flat = ((answers.data ?? []) as unknown as A[]).filter(a => a.question).map(a => ({ folder_id: a.question!.folder_id, is_correct: a.is_correct }));
+    const flat = ((answers.data ?? []) as unknown as A[]).flatMap(a => a.question ? [{ folder_id: a.question.folder_id, is_correct: a.is_correct }] : []);
     const titles = new Map((folders.data ?? []).map(f => [f.id, f.title]));
     return {
       name: profile.data?.full_name ?? null,
       todayPoints: todayRow?.points ?? 0, todayAnswered: todayRow?.questions_answered ?? 0, todayLessons: todayRow?.lessons_completed ?? 0,
       streak: computeStreak(studied, t), mistakes: mistakes.count ?? 0,
-      weak: weakTopics(flat).filter(w => titles.has(w.folder_id)).slice(0, 5).map(w => ({ ...w, title: titles.get(w.folder_id)! })),
+      weak: weakTopics(flat).flatMap(w => { const title = titles.get(w.folder_id); return title ? [{ ...w, title }] : []; }).slice(0, 5),
     };
   },
 });
