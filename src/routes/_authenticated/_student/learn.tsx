@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, ComingSoon } from "@/components/PageHeader";
 
-export const Route = createFileRoute("/_authenticated/learn")({
+export const Route = createFileRoute("/_authenticated/_student/learn")({
   head: () => ({
     meta: [
       { title: "শিখুন — Arab learn" },
