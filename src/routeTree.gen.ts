@@ -13,11 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedExamsRouteImport } from './routes/_authenticated/exams'
-import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
-import { Route as AuthenticatedLearnRouteImport } from './routes/_authenticated/learn'
-import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedStudentExamsRouteImport } from './routes/_authenticated/_student/exams'
+import { Route as AuthenticatedStudentHomeRouteImport } from './routes/_authenticated/_student/home'
+import { Route as AuthenticatedStudentLearnRouteImport } from './routes/_authenticated/_student/learn'
+import { Route as AuthenticatedStudentSettingsRouteImport } from './routes/_authenticated/_student/settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -38,51 +37,48 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedExamsRoute = AuthenticatedExamsRouteImport.update({
-  id: '/exams',
-  path: '/exams',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedLearnRoute = AuthenticatedLearnRouteImport.update({
-  id: '/learn',
-  path: '/learn',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
+const AuthenticatedStudentExamsRoute =
+  AuthenticatedStudentExamsRouteImport.update({
+    id: '/_student/exams',
+    path: '/exams',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStudentHomeRoute =
+  AuthenticatedStudentHomeRouteImport.update({
+    id: '/_student/home',
+    path: '/home',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStudentLearnRoute =
+  AuthenticatedStudentLearnRouteImport.update({
+    id: '/_student/learn',
+    path: '/learn',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStudentSettingsRoute =
+  AuthenticatedStudentSettingsRouteImport.update({
+    id: '/_student/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/exams': typeof AuthenticatedExamsRoute
-  '/home': typeof AuthenticatedHomeRoute
-  '/learn': typeof AuthenticatedLearnRoute
-  '/settings': typeof AuthenticatedSettingsRoute
+  '/exams': typeof AuthenticatedStudentExamsRoute
+  '/home': typeof AuthenticatedStudentHomeRoute
+  '/learn': typeof AuthenticatedStudentLearnRoute
+  '/settings': typeof AuthenticatedStudentSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/exams': typeof AuthenticatedExamsRoute
-  '/home': typeof AuthenticatedHomeRoute
-  '/learn': typeof AuthenticatedLearnRoute
-  '/settings': typeof AuthenticatedSettingsRoute
+  '/exams': typeof AuthenticatedStudentExamsRoute
+  '/home': typeof AuthenticatedStudentHomeRoute
+  '/learn': typeof AuthenticatedStudentLearnRoute
+  '/settings': typeof AuthenticatedStudentSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -90,11 +86,10 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/exams': typeof AuthenticatedExamsRoute
-  '/_authenticated/home': typeof AuthenticatedHomeRoute
-  '/_authenticated/learn': typeof AuthenticatedLearnRoute
-  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/_student/exams': typeof AuthenticatedStudentExamsRoute
+  '/_authenticated/_student/home': typeof AuthenticatedStudentHomeRoute
+  '/_authenticated/_student/learn': typeof AuthenticatedStudentLearnRoute
+  '/_authenticated/_student/settings': typeof AuthenticatedStudentSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -102,7 +97,6 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
-    | '/dashboard'
     | '/exams'
     | '/home'
     | '/learn'
@@ -112,7 +106,6 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
-    | '/dashboard'
     | '/exams'
     | '/home'
     | '/learn'
@@ -123,11 +116,10 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
-    | '/_authenticated/dashboard'
-    | '/_authenticated/exams'
-    | '/_authenticated/home'
-    | '/_authenticated/learn'
-    | '/_authenticated/settings'
+    | '/_authenticated/_student/exams'
+    | '/_authenticated/_student/home'
+    | '/_authenticated/_student/learn'
+    | '/_authenticated/_student/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -167,58 +159,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/exams': {
-      id: '/_authenticated/exams'
+    '/_authenticated/_student/exams': {
+      id: '/_authenticated/_student/exams'
       path: '/exams'
       fullPath: '/exams'
-      preLoaderRoute: typeof AuthenticatedExamsRouteImport
+      preLoaderRoute: typeof AuthenticatedStudentExamsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/home': {
-      id: '/_authenticated/home'
+    '/_authenticated/_student/home': {
+      id: '/_authenticated/_student/home'
       path: '/home'
       fullPath: '/home'
-      preLoaderRoute: typeof AuthenticatedHomeRouteImport
+      preLoaderRoute: typeof AuthenticatedStudentHomeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/learn': {
-      id: '/_authenticated/learn'
+    '/_authenticated/_student/learn': {
+      id: '/_authenticated/_student/learn'
       path: '/learn'
       fullPath: '/learn'
-      preLoaderRoute: typeof AuthenticatedLearnRouteImport
+      preLoaderRoute: typeof AuthenticatedStudentLearnRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/settings': {
-      id: '/_authenticated/settings'
+    '/_authenticated/_student/settings': {
+      id: '/_authenticated/_student/settings'
       path: '/settings'
       fullPath: '/settings'
-      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      preLoaderRoute: typeof AuthenticatedStudentSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedExamsRoute: typeof AuthenticatedExamsRoute
-  AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
-  AuthenticatedLearnRoute: typeof AuthenticatedLearnRoute
-  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedStudentExamsRoute: typeof AuthenticatedStudentExamsRoute
+  AuthenticatedStudentHomeRoute: typeof AuthenticatedStudentHomeRoute
+  AuthenticatedStudentLearnRoute: typeof AuthenticatedStudentLearnRoute
+  AuthenticatedStudentSettingsRoute: typeof AuthenticatedStudentSettingsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedExamsRoute: AuthenticatedExamsRoute,
-  AuthenticatedHomeRoute: AuthenticatedHomeRoute,
-  AuthenticatedLearnRoute: AuthenticatedLearnRoute,
-  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedStudentExamsRoute: AuthenticatedStudentExamsRoute,
+  AuthenticatedStudentHomeRoute: AuthenticatedStudentHomeRoute,
+  AuthenticatedStudentLearnRoute: AuthenticatedStudentLearnRoute,
+  AuthenticatedStudentSettingsRoute: AuthenticatedStudentSettingsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
