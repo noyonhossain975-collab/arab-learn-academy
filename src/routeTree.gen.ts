@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedStudentRouteRouteImport } from './routes/_authenticated/_student/route'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedStudentBlogRouteImport } from './routes/_authenticated/_student/blog'
 import { Route as AuthenticatedStudentExamsRouteImport } from './routes/_authenticated/_student/exams'
 import { Route as AuthenticatedStudentHomeRouteImport } from './routes/_authenticated/_student/home'
 import { Route as AuthenticatedStudentLearnRouteImport } from './routes/_authenticated/_student/learn'
@@ -26,6 +27,7 @@ import { Route as AuthenticatedAdminLessonsRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminManagementRouteImport } from './routes/_authenticated/admin/management'
 import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated/admin/reports'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
+import { Route as AuthenticatedStudentBlogSlugRouteImport } from './routes/_authenticated/_student/blog.$slug'
 import { Route as AuthenticatedStudentExamFoldersFolderIdRouteImport } from './routes/_authenticated/_student/exam-folders.$folderId'
 import { Route as AuthenticatedStudentExamFolderIdRouteImport } from './routes/_authenticated/_student/exam.$folderId'
 import { Route as AuthenticatedStudentLessonGroupsGroupIdRouteImport } from './routes/_authenticated/_student/lesson-groups.$groupId'
@@ -61,6 +63,12 @@ const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStudentBlogRoute =
+  AuthenticatedStudentBlogRouteImport.update({
+    id: '/blog',
+    path: '/blog',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
 const AuthenticatedStudentExamsRoute =
   AuthenticatedStudentExamsRouteImport.update({
     id: '/exams',
@@ -125,6 +133,12 @@ const AuthenticatedAdminSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedStudentBlogSlugRoute =
+  AuthenticatedStudentBlogSlugRouteImport.update({
+    id: '/$slug',
+    path: '/$slug',
+    getParentRoute: () => AuthenticatedStudentBlogRoute,
+  } as any)
 const AuthenticatedStudentExamFoldersFolderIdRoute =
   AuthenticatedStudentExamFoldersFolderIdRouteImport.update({
     id: '/exam-folders/$folderId',
@@ -161,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/blog': typeof AuthenticatedStudentBlogRouteWithChildren
   '/exams': typeof AuthenticatedStudentExamsRoute
   '/home': typeof AuthenticatedStudentHomeRoute
   '/learn': typeof AuthenticatedStudentLearnRoute
@@ -172,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/blog/$slug': typeof AuthenticatedStudentBlogSlugRoute
   '/exam-folders/$folderId': typeof AuthenticatedStudentExamFoldersFolderIdRoute
   '/exam/$folderId': typeof AuthenticatedStudentExamFolderIdRoute
   '/lesson-groups/$groupId': typeof AuthenticatedStudentLessonGroupsGroupIdRoute
@@ -182,6 +198,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/blog': typeof AuthenticatedStudentBlogRouteWithChildren
   '/exams': typeof AuthenticatedStudentExamsRoute
   '/home': typeof AuthenticatedStudentHomeRoute
   '/learn': typeof AuthenticatedStudentLearnRoute
@@ -193,6 +210,7 @@ export interface FileRoutesByTo {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/blog/$slug': typeof AuthenticatedStudentBlogSlugRoute
   '/exam-folders/$folderId': typeof AuthenticatedStudentExamFoldersFolderIdRoute
   '/exam/$folderId': typeof AuthenticatedStudentExamFolderIdRoute
   '/lesson-groups/$groupId': typeof AuthenticatedStudentLessonGroupsGroupIdRoute
@@ -207,6 +225,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/_student': typeof AuthenticatedStudentRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/_authenticated/_student/blog': typeof AuthenticatedStudentBlogRouteWithChildren
   '/_authenticated/_student/exams': typeof AuthenticatedStudentExamsRoute
   '/_authenticated/_student/home': typeof AuthenticatedStudentHomeRoute
   '/_authenticated/_student/learn': typeof AuthenticatedStudentLearnRoute
@@ -218,6 +237,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/_student/blog/$slug': typeof AuthenticatedStudentBlogSlugRoute
   '/_authenticated/_student/exam-folders/$folderId': typeof AuthenticatedStudentExamFoldersFolderIdRoute
   '/_authenticated/_student/exam/$folderId': typeof AuthenticatedStudentExamFolderIdRoute
   '/_authenticated/_student/lesson-groups/$groupId': typeof AuthenticatedStudentLessonGroupsGroupIdRoute
@@ -231,6 +251,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/admin'
+    | '/blog'
     | '/exams'
     | '/home'
     | '/learn'
@@ -242,6 +263,7 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin/'
+    | '/blog/$slug'
     | '/exam-folders/$folderId'
     | '/exam/$folderId'
     | '/lesson-groups/$groupId'
@@ -252,6 +274,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/blog'
     | '/exams'
     | '/home'
     | '/learn'
@@ -263,6 +286,7 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin'
+    | '/blog/$slug'
     | '/exam-folders/$folderId'
     | '/exam/$folderId'
     | '/lesson-groups/$groupId'
@@ -276,6 +300,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/_student'
     | '/_authenticated/admin'
+    | '/_authenticated/_student/blog'
     | '/_authenticated/_student/exams'
     | '/_authenticated/_student/home'
     | '/_authenticated/_student/learn'
@@ -287,6 +312,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/reports'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/'
+    | '/_authenticated/_student/blog/$slug'
     | '/_authenticated/_student/exam-folders/$folderId'
     | '/_authenticated/_student/exam/$folderId'
     | '/_authenticated/_student/lesson-groups/$groupId'
@@ -344,6 +370,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/_student/blog': {
+      id: '/_authenticated/_student/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof AuthenticatedStudentBlogRouteImport
+      parentRoute: typeof AuthenticatedStudentRouteRoute
     }
     '/_authenticated/_student/exams': {
       id: '/_authenticated/_student/exams'
@@ -422,6 +455,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/_student/blog/$slug': {
+      id: '/_authenticated/_student/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof AuthenticatedStudentBlogSlugRouteImport
+      parentRoute: typeof AuthenticatedStudentBlogRoute
+    }
     '/_authenticated/_student/exam-folders/$folderId': {
       id: '/_authenticated/_student/exam-folders/$folderId'
       path: '/exam-folders/$folderId'
@@ -460,7 +500,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedStudentBlogRouteChildren {
+  AuthenticatedStudentBlogSlugRoute: typeof AuthenticatedStudentBlogSlugRoute
+}
+
+const AuthenticatedStudentBlogRouteChildren: AuthenticatedStudentBlogRouteChildren =
+  {
+    AuthenticatedStudentBlogSlugRoute: AuthenticatedStudentBlogSlugRoute,
+  }
+
+const AuthenticatedStudentBlogRouteWithChildren =
+  AuthenticatedStudentBlogRoute._addFileChildren(
+    AuthenticatedStudentBlogRouteChildren,
+  )
+
 interface AuthenticatedStudentRouteRouteChildren {
+  AuthenticatedStudentBlogRoute: typeof AuthenticatedStudentBlogRouteWithChildren
   AuthenticatedStudentExamsRoute: typeof AuthenticatedStudentExamsRoute
   AuthenticatedStudentHomeRoute: typeof AuthenticatedStudentHomeRoute
   AuthenticatedStudentLearnRoute: typeof AuthenticatedStudentLearnRoute
@@ -475,6 +530,7 @@ interface AuthenticatedStudentRouteRouteChildren {
 
 const AuthenticatedStudentRouteRouteChildren: AuthenticatedStudentRouteRouteChildren =
   {
+    AuthenticatedStudentBlogRoute: AuthenticatedStudentBlogRouteWithChildren,
     AuthenticatedStudentExamsRoute: AuthenticatedStudentExamsRoute,
     AuthenticatedStudentHomeRoute: AuthenticatedStudentHomeRoute,
     AuthenticatedStudentLearnRoute: AuthenticatedStudentLearnRoute,
