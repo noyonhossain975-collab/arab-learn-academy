@@ -27,11 +27,17 @@ function ResetPassword() {
 
   async function submit(e: FormEvent) {
     e.preventDefault();
-    if (password.length < 6) return toast.error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে");
+    if (password.length < 6) {
+      toast.error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে");
+      return;
+    }
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("পাসওয়ার্ড পরিবর্তন হয়েছে");
     navigate({ to: "/home", replace: true });
   }
