@@ -25,6 +25,9 @@ import { Route as AuthenticatedAdminLessonsRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminManagementRouteImport } from './routes/_authenticated/admin/management'
 import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated/admin/reports'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
+import { Route as AuthenticatedStudentLessonGroupsGroupIdRouteImport } from './routes/_authenticated/_student/lesson-groups.$groupId'
+import { Route as AuthenticatedStudentLessonsLessonIdRouteImport } from './routes/_authenticated/_student/lessons.$lessonId'
+import { Route as AuthenticatedStudentVocabularyTopicIdRouteImport } from './routes/_authenticated/_student/vocabulary.$topicId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -113,6 +116,24 @@ const AuthenticatedAdminSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedStudentLessonGroupsGroupIdRoute =
+  AuthenticatedStudentLessonGroupsGroupIdRouteImport.update({
+    id: '/lesson-groups/$groupId',
+    path: '/lesson-groups/$groupId',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
+const AuthenticatedStudentLessonsLessonIdRoute =
+  AuthenticatedStudentLessonsLessonIdRouteImport.update({
+    id: '/lessons/$lessonId',
+    path: '/lessons/$lessonId',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
+const AuthenticatedStudentVocabularyTopicIdRoute =
+  AuthenticatedStudentVocabularyTopicIdRouteImport.update({
+    id: '/vocabulary/$topicId',
+    path: '/vocabulary/$topicId',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -129,6 +150,9 @@ export interface FileRoutesByFullPath {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/lesson-groups/$groupId': typeof AuthenticatedStudentLessonGroupsGroupIdRoute
+  '/lessons/$lessonId': typeof AuthenticatedStudentLessonsLessonIdRoute
+  '/vocabulary/$topicId': typeof AuthenticatedStudentVocabularyTopicIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -144,6 +168,9 @@ export interface FileRoutesByTo {
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/lesson-groups/$groupId': typeof AuthenticatedStudentLessonGroupsGroupIdRoute
+  '/lessons/$lessonId': typeof AuthenticatedStudentLessonsLessonIdRoute
+  '/vocabulary/$topicId': typeof AuthenticatedStudentVocabularyTopicIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -163,6 +190,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/_student/lesson-groups/$groupId': typeof AuthenticatedStudentLessonGroupsGroupIdRoute
+  '/_authenticated/_student/lessons/$lessonId': typeof AuthenticatedStudentLessonsLessonIdRoute
+  '/_authenticated/_student/vocabulary/$topicId': typeof AuthenticatedStudentVocabularyTopicIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -181,6 +211,9 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin/'
+    | '/lesson-groups/$groupId'
+    | '/lessons/$lessonId'
+    | '/vocabulary/$topicId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -196,6 +229,9 @@ export interface FileRouteTypes {
     | '/admin/reports'
     | '/admin/settings'
     | '/admin'
+    | '/lesson-groups/$groupId'
+    | '/lessons/$lessonId'
+    | '/vocabulary/$topicId'
   id:
     | '__root__'
     | '/'
@@ -214,6 +250,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/reports'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/'
+    | '/_authenticated/_student/lesson-groups/$groupId'
+    | '/_authenticated/_student/lessons/$lessonId'
+    | '/_authenticated/_student/vocabulary/$topicId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -337,6 +376,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/_student/lesson-groups/$groupId': {
+      id: '/_authenticated/_student/lesson-groups/$groupId'
+      path: '/lesson-groups/$groupId'
+      fullPath: '/lesson-groups/$groupId'
+      preLoaderRoute: typeof AuthenticatedStudentLessonGroupsGroupIdRouteImport
+      parentRoute: typeof AuthenticatedStudentRouteRoute
+    }
+    '/_authenticated/_student/lessons/$lessonId': {
+      id: '/_authenticated/_student/lessons/$lessonId'
+      path: '/lessons/$lessonId'
+      fullPath: '/lessons/$lessonId'
+      preLoaderRoute: typeof AuthenticatedStudentLessonsLessonIdRouteImport
+      parentRoute: typeof AuthenticatedStudentRouteRoute
+    }
+    '/_authenticated/_student/vocabulary/$topicId': {
+      id: '/_authenticated/_student/vocabulary/$topicId'
+      path: '/vocabulary/$topicId'
+      fullPath: '/vocabulary/$topicId'
+      preLoaderRoute: typeof AuthenticatedStudentVocabularyTopicIdRouteImport
+      parentRoute: typeof AuthenticatedStudentRouteRoute
+    }
   }
 }
 
@@ -345,6 +405,9 @@ interface AuthenticatedStudentRouteRouteChildren {
   AuthenticatedStudentHomeRoute: typeof AuthenticatedStudentHomeRoute
   AuthenticatedStudentLearnRoute: typeof AuthenticatedStudentLearnRoute
   AuthenticatedStudentSettingsRoute: typeof AuthenticatedStudentSettingsRoute
+  AuthenticatedStudentLessonGroupsGroupIdRoute: typeof AuthenticatedStudentLessonGroupsGroupIdRoute
+  AuthenticatedStudentLessonsLessonIdRoute: typeof AuthenticatedStudentLessonsLessonIdRoute
+  AuthenticatedStudentVocabularyTopicIdRoute: typeof AuthenticatedStudentVocabularyTopicIdRoute
 }
 
 const AuthenticatedStudentRouteRouteChildren: AuthenticatedStudentRouteRouteChildren =
@@ -353,6 +416,12 @@ const AuthenticatedStudentRouteRouteChildren: AuthenticatedStudentRouteRouteChil
     AuthenticatedStudentHomeRoute: AuthenticatedStudentHomeRoute,
     AuthenticatedStudentLearnRoute: AuthenticatedStudentLearnRoute,
     AuthenticatedStudentSettingsRoute: AuthenticatedStudentSettingsRoute,
+    AuthenticatedStudentLessonGroupsGroupIdRoute:
+      AuthenticatedStudentLessonGroupsGroupIdRoute,
+    AuthenticatedStudentLessonsLessonIdRoute:
+      AuthenticatedStudentLessonsLessonIdRoute,
+    AuthenticatedStudentVocabularyTopicIdRoute:
+      AuthenticatedStudentVocabularyTopicIdRoute,
   }
 
 const AuthenticatedStudentRouteRouteWithChildren =

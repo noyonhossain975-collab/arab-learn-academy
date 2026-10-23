@@ -1,0 +1,12 @@
+import { describe,expect,it,vi } from "vitest";
+import { render,screen,fireEvent } from "@testing-library/react";
+import { adjacentLessons,nextCard,vocabularyOptions } from "@/lib/learning";
+import { Flashcards } from "@/components/learning/VocabularyReader";
+const mocks=vi.hoisted(()=>({from:vi.fn(),rpc:vi.fn()}));
+vi.mock("@/integrations/supabase/client",()=>({supabase:mocks}));
+describe("student learning",()=>{
+ it("uses published lesson order for previous and next",()=>{const lessons=[{id:"a",title:"এক",is_locked:false,is_completed:false},{id:"b",title:"দুই",is_locked:false,is_completed:false},{id:"c",title:"তিন",is_locked:true,is_completed:false}];expect(adjacentLessons(lessons,"b")).toEqual({previous:lessons[0],next:lessons[2]});expect(adjacentLessons(lessons,"a").previous).toBeUndefined();});
+ it("keeps flashcard navigation within the topic",()=>{expect(nextCard(0,-1,3)).toBe(0);expect(nextCard(2,1,3)).toBe(2);expect(nextCard(0,1,3)).toBe(1);});
+ it("flips Arabic to Bengali meaning and resets on the next word",()=>{render(<Flashcards words={[{id:"1",arabic:"كِتَابٌ",meaning_bn:"বই",pronunciation_bn:"কিতাবুন"},{id:"2",arabic:"قَلَمٌ",meaning_bn:"কলম",pronunciation_bn:"কলামুন"}]}/>);expect(screen.getByText("كِتَابٌ")).toBeInTheDocument();expect(screen.getByText("কিতাবুন")).toBeInTheDocument();fireEvent.click(screen.getByRole("button",{name:"বাংলা অর্থ দেখো"}));expect(screen.getByText("বই")).toBeInTheDocument();fireEvent.click(screen.getByRole("button",{name:"পরের শব্দ"}));expect(screen.getByText("قَلَمٌ")).toBeInTheDocument();expect(screen.queryByText("বই")).not.toBeInTheDocument();});
+ it("does not request word content for a locked premium topic",async()=>{const query={select:vi.fn().mockReturnThis(),eq:vi.fn().mockReturnThis(),maybeSingle:vi.fn().mockResolvedValue({data:{id:"paid",title:"প্রিমিয়াম",is_free:false},error:null})};mocks.from.mockReturnValue(query);mocks.rpc.mockResolvedValue({data:false,error:null});const options=vocabularyOptions("paid","student");const result=await options.queryFn?.({} as never);expect(result).toEqual({topic:{id:"paid",title:"প্রিমিয়াম",is_free:false},locked:true,words:[]});expect(mocks.from).toHaveBeenCalledWith("vocab_topics");expect(mocks.from).not.toHaveBeenCalledWith("vocab_words");});
+});
