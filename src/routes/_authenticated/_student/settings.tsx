@@ -39,6 +39,7 @@ function Settings() {
           <p className="text-sm text-muted-foreground">ইমেইল</p>
           <p className="font-semibold">{user.email}</p>
         </div>
+        <Link to="/mistakes" className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-border py-3 font-bold">সংরক্ষিত ভুল</Link>
         {isAdmin && (
           <Link to="/admin" className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-primary py-3 font-bold text-primary">
             <ShieldCheck className="h-5 w-5" /> অ্যাডমিন প্যানেল
