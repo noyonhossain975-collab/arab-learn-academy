@@ -845,6 +845,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _grade: {
+        Args: {
+          p_option_id: string
+          p_part_id: string
+          p_question_id: string
+          p_self_correct: boolean
+        }
+        Returns: Record<string, unknown>
+      }
+      _track: {
+        Args: {
+          ok: boolean
+          p_question_id: string
+          practice: boolean
+          pts: number
+          uid: string
+        }
+        Returns: undefined
+      }
       admin_active_per_day: {
         Args: { p_days: number }
         Returns: {
@@ -899,6 +918,16 @@ export type Database = {
           day: string
         }[]
       }
+      answer_question: {
+        Args: {
+          p_attempt_id: string
+          p_option_id?: string
+          p_part_id?: string
+          p_question_id: string
+          p_self_correct?: boolean
+        }
+        Returns: boolean
+      }
       can_access_folder: {
         Args: { _folder_id: string; _user_id: string }
         Returns: boolean
@@ -913,6 +942,7 @@ export type Database = {
       }
       complete_lesson: { Args: { p_lesson_id: string }; Returns: undefined }
       dhaka_today: { Args: never; Returns: string }
+      finish_exam: { Args: { p_attempt_id: string }; Returns: undefined }
       folder_root_key: { Args: { _folder_id: string }; Returns: string }
       get_group_lessons: {
         Args: { p_group_id: string }
@@ -934,6 +964,16 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: never; Returns: boolean }
+      practice_mistake: {
+        Args: {
+          p_option_id?: string
+          p_part_id?: string
+          p_question_id: string
+          p_self_correct?: boolean
+        }
+        Returns: boolean
+      }
+      start_exam: { Args: { p_folder_id: string }; Returns: string }
       touch_last_seen: { Args: never; Returns: undefined }
     }
     Enums: {
