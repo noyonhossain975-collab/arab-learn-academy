@@ -21,3 +21,5 @@
 - Rich content is stored as sanitized HTML (`src/lib/content.ts`); render with the `.lesson-content` class.
 - Exam admin navigation uses folder/question search parameters and focused exam components; saves/import batches use admin-checked invoker RPCs to keep questions and child answers atomic while preserving existing answer identifiers.
 - Admin leaf routes use shared metadata defaults with distinct page titles and descriptions so private administration pages have complete, consistent head tags.
+- Reports share a reusable submission dialog and owner-scoped student list; admin triage uses RLS and invalidates report/badge queries after replies, while a database trigger restricts student updates to read state.
+- Site settings are split into contacts, WhatsApp and blog editors; only named non-secret payment settings are editable, and contact links use protocol validation before rendering.

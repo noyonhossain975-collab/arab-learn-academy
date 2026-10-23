@@ -1,0 +1,32 @@
+import { useQuery,useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { Plus,Pencil,ArrowLeft,Save,ImagePlus,X } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { ConfirmDelete } from "@/components/admin/AdminControls";
+import { RichEditor } from "@/components/admin/RichEditor";
+import { sanitizeHtml } from "@/lib/content";
+import { uploadContentImage } from "@/lib/upload";
+import { fmtDate } from "@/components/admin/AdminUI";
+import type { Tables } from "@/integrations/supabase/types";
+type Post=Tables<"blog_posts">;
+export function BlogAdmin(){
+ const qc=useQueryClient();const [editing,setEditing]=useState<string|null>(null),[search,setSearch]=useState(""),[busy,setBusy]=useState(false);
+ const posts=useQuery({queryKey:["admin","blog-posts"],queryFn:async()=>{const {data,error}=await supabase.from("blog_posts").select("*").order("created_at",{ascending:false});if(error)throw error;return data;}});
+ const refresh=()=>qc.invalidateQueries({queryKey:["admin","blog-posts"]});
+ if(posts.isPending)return <p>লোড হচ্ছে…</p>;if(posts.error)return <p className="text-destructive">ব্লগ লোড হয়নি <Button variant="link" onClick={()=>posts.refetch()}>আবার চেষ্টা করো</Button></p>;
+ if(editing){const post=posts.data.find(p=>p.id===editing);if(editing!=="new"&&!post)return <Button onClick={()=>setEditing(null)}>ব্লগ তালিকা</Button>;return <BlogEditor key={editing} post={post} onBack={()=>setEditing(null)} onSaved={async()=>{await refresh();setEditing(null);}}/>;}
+ const list=posts.data.filter(p=>p.title.toLowerCase().includes(search.toLowerCase()));
+ return <section className="space-y-5"><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-lg font-bold">ব্লগ ও আর্টিকেল</h2><Button onClick={()=>setEditing("new")}><Plus className="h-4 w-4"/>নতুন আর্টিকেল</Button></div><Input className="max-w-sm" aria-label="ব্লগ খুঁজুন" placeholder="ব্লগ খুঁজুন" value={search} onChange={e=>setSearch(e.target.value)}/><div className="divide-y divide-border border-y border-border">{list.map(p=><div key={p.id} className="flex items-center gap-3 py-4">{p.cover_image_url&&<img src={p.cover_image_url} alt="" className="h-16 w-20 rounded-md object-cover"/>}<div className="min-w-0 flex-1"><h3 className="break-words font-semibold">{p.title}</h3><p className="text-xs text-muted-foreground">{fmtDate(p.published_at??p.created_at)}</p></div><Switch checked={p.is_published} aria-label={`${p.title} প্রকাশিত`} disabled={busy} onCheckedChange={async v=>{setBusy(true);try{const {error}=await supabase.from("blog_posts").update({is_published:v,published_at:v?(p.published_at??new Date().toISOString()):p.published_at}).eq("id",p.id);if(error)throw error;await refresh();toast.success("প্রকাশের অবস্থা সংরক্ষণ হয়েছে");}catch{toast.error("সংরক্ষণ হয়নি");}finally{setBusy(false);}}}/><Button variant="ghost" size="icon" title="ব্লগ সম্পাদনা" onClick={()=>setEditing(p.id)}><Pencil className="h-4 w-4"/></Button><ConfirmDelete name={p.title} onConfirm={async()=>{const {error}=await supabase.from("blog_posts").delete().eq("id",p.id);if(error)toast.error("মুছে ফেলা যায়নি");else{await refresh();toast.success("ব্লগ মুছে ফেলা হয়েছে");}}}/></div>)}{!list.length&&<p className="py-8 text-center text-muted-foreground">কোনো আর্টিকেল নেই</p>}</div></section>;
+}
+function BlogEditor({post,onBack,onSaved}:{post:Post|undefined;onBack:()=>void;onSaved:()=>Promise<void>}){
+ const [title,setTitle]=useState(post?.title??""),[slug,setSlug]=useState(post?.slug??`article-${crypto.randomUUID().slice(0,8)}`),[content,setContent]=useState(post?.content??""),[cover,setCover]=useState(post?.cover_image_url??""),[published,setPublished]=useState(post?.is_published??false),[busy,setBusy]=useState(false),[uploading,setUploading]=useState(false);
+ return <form className="max-w-4xl space-y-4" onSubmit={async e=>{e.preventDefault();if(!title.trim()||!slug.trim()||!content.replace(/<[^>]*>/g,"").trim()){toast.error("শিরোনাম, লিংকের নাম এবং মূল লেখা দিন");return;}setBusy(true);try{const values={title:title.trim(),slug:slug.trim(),content:sanitizeHtml(content),cover_image_url:cover||null,is_published:published,published_at:published?(post?.published_at??new Date().toISOString()):(post?.published_at??null)};const {error}=post?await supabase.from("blog_posts").update(values).eq("id",post.id):await supabase.from("blog_posts").insert(values);if(error)throw error;toast.success("আর্টিকেল সংরক্ষণ হয়েছে");await onSaved();}catch{toast.error("সংরক্ষণ হয়নি। লিংকের নাম অন্য আর্টিকেলের মতো হলে বদলে আবার চেষ্টা করুন।");}finally{setBusy(false);}}}>
+ <div className="flex flex-wrap items-center justify-between gap-3"><Button type="button" variant="outline" disabled={busy||uploading} onClick={onBack}><ArrowLeft className="h-4 w-4"/>ব্লগ তালিকা</Button><label className="flex items-center gap-2"><Switch checked={published} onCheckedChange={setPublished}/>প্রকাশিত</label><Button type="submit" disabled={busy||uploading}><Save className="h-4 w-4"/>{busy?"সংরক্ষণ হচ্ছে…":"সংরক্ষণ করো"}</Button></div>
+ <label className="block space-y-2"><span>শিরোনাম</span><Input required value={title} onChange={e=>setTitle(e.target.value)}/></label><label className="block space-y-2"><span>লিংকের নাম</span><Input required pattern="[a-zA-Z0-9_-]+" value={slug} onChange={e=>setSlug(e.target.value)}/></label>
+ <label className="inline-flex cursor-pointer items-center gap-2 text-primary"><ImagePlus className="h-4 w-4"/>{uploading?"ছবি যোগ হচ্ছে…":"প্রচ্ছদ ছবি যোগ করো"}<input type="file" accept="image/*" className="sr-only" disabled={busy||uploading} onChange={async e=>{const file=e.target.files?.[0];if(!file)return;setUploading(true);try{setCover(await uploadContentImage(file,"blog"));}catch(err){toast.error(err instanceof Error?err.message:"ছবি যোগ হয়নি");}finally{setUploading(false);}}}/></label>{cover&&<div className="flex items-start gap-2"><img src={cover} alt="ব্লগের প্রচ্ছদ" className="max-h-72 max-w-full rounded-lg object-contain"/><Button type="button" size="icon" variant="ghost" title="প্রচ্ছদ সরাও" onClick={()=>setCover("")}><X className="h-4 w-4"/></Button></div>}<RichEditor value={content} onChange={setContent} folder="blog"/>
+ </form>;
+}

@@ -1,0 +1,35 @@
+import { useQuery,useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { Send, Pencil } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select";
+import { AdminTitle,fmtDate } from "@/components/admin/AdminUI";
+import { REPORT_STATUS,type ReportStatus } from "@/lib/site-settings";
+export function ReportsAdmin() {
+  const [status,setStatus]=useState("all"),[search,setSearch]=useState(""),[selected,setSelected]=useState<string|null>(null);
+  const reports=useQuery({queryKey:["reports","admin",status],queryFn:async()=>{
+    let query=supabase.from("reports").select("*, profiles(full_name,email)").order("created_at",{ascending:false});if(status!=="all")query=query.eq("status",status);
+    const {data,error}=await query;if(error)throw error;return data;
+  }});
+  const list=(reports.data??[]).filter(r=>[r.message,r.profiles?.full_name,r.profiles?.email].some(s=>s?.toLowerCase().includes(search.toLowerCase())));
+  const active=reports.data?.find(r=>r.id===selected);
+  return <><AdminTitle title="রিপোর্ট"/><div className="mb-5 flex flex-wrap gap-3"><Input className="max-w-sm" placeholder="নাম, ইমেইল বা বার্তা খুঁজুন" aria-label="রিপোর্ট খুঁজুন" value={search} onChange={e=>setSearch(e.target.value)}/><Select value={status} onValueChange={v=>{setStatus(v);setSelected(null);}}><SelectTrigger className="w-44"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="all">সব রিপোর্ট</SelectItem>{Object.entries(REPORT_STATUS).map(([v,label])=><SelectItem key={v} value={v}>{label}</SelectItem>)}</SelectContent></Select></div>
+    {reports.error?<p role="alert" className="text-destructive">রিপোর্ট লোড হয়নি। <Button variant="link" onClick={()=>reports.refetch()}>আবার চেষ্টা করো</Button></p>:reports.isPending?<p>লোড হচ্ছে…</p>:<div className="grid items-start gap-6 xl:grid-cols-[minmax(260px,1fr)_minmax(0,1.6fr)]"><div className="divide-y divide-border rounded-lg border border-border bg-background">{list.map(r=><Button key={r.id} variant="ghost" className={`h-auto w-full flex-col items-start gap-2 whitespace-normal rounded-none p-4 text-left ${r.id===selected?"bg-muted":""}`} onClick={()=>setSelected(r.id)}><span className="flex w-full justify-between gap-2 text-xs text-muted-foreground"><span>{REPORT_STATUS[r.status as ReportStatus]}</span><span>{fmtDate(r.created_at)}</span></span><span className="font-semibold">{r.profiles?.full_name??"শিক্ষার্থী"}</span><span className="line-clamp-2 break-words font-normal">{r.message}</span></Button>)}{!list.length&&<p className="p-8 text-center text-muted-foreground">কোনো রিপোর্ট নেই</p>}</div>{active?<ReportDetail key={active.id} report={active}/>:<p className="py-8 text-muted-foreground">{list.length?"রিপোর্ট নির্বাচন করুন":""}</p>}</div>}
+  </>;
+}
+type ReportRow={id:string;question_id:string|null;message:string;status:string;admin_reply:string|null;profiles:{full_name:string|null;email:string|null}|null};
+function ReportDetail({report}:{report:ReportRow}) {
+  const qc=useQueryClient();const [status,setStatus]=useState(report.status),[reply,setReply]=useState(report.admin_reply??""),[busy,setBusy]=useState(false);
+  const question=useQuery({queryKey:["admin","report-question",report.question_id],enabled:!!report.question_id,queryFn:async()=>{if(!report.question_id)return null;const {data,error}=await supabase.from("questions").select("*,question_options(*),creative_parts(*)").eq("id",report.question_id).maybeSingle();if(error)throw error;return data;}});
+  async function save(send:boolean){if(send&&!reply.trim())return;setBusy(true);try{const {error}=await supabase.from("reports").update(send?{status,admin_reply:reply.trim(),replied_at:new Date().toISOString(),reply_seen_by_student:false}:{status}).eq("id",report.id);if(error)throw error;await Promise.all([qc.invalidateQueries({queryKey:["reports"]}),qc.invalidateQueries({queryKey:["admin","new-reports"]}),qc.invalidateQueries({queryKey:["admin","stats"]})]);toast.success(send?"উত্তর পাঠানো হয়েছে":"অবস্থা সংরক্ষণ হয়েছে");}catch{toast.error("সংরক্ষণ হয়নি। আবার চেষ্টা করুন।");}finally{setBusy(false);}}
+  return <section className="min-w-0 space-y-5"><div><h2 className="font-bold">{report.profiles?.full_name??"শিক্ষার্থী"}</h2><p className="break-all text-sm text-muted-foreground">{report.profiles?.email??"—"}</p></div><p dir="auto" className="whitespace-pre-wrap break-words">{report.message}</p>
+    {report.question_id&&<div className="space-y-3 border-y border-border py-4"><h3 className="font-semibold">প্রশ্ন</h3>{question.isPending?<p>লোড হচ্ছে…</p>:question.error?<p className="text-destructive">প্রশ্ন লোড হয়নি</p>:question.data?<><p dir="auto" className="whitespace-pre-wrap">{question.data.question_text}</p>{question.data.image_url&&<img src={question.data.image_url} alt="প্রশ্নের ছবি" className="max-h-64 max-w-full object-contain"/>}{question.data.question_options.sort((a,b)=>a.order_index-b.order_index).map(o=><p key={o.id} dir="auto" className={o.is_correct?"font-semibold text-primary":""}>{o.is_correct?"✓ ":""}{o.option_text}</p>)}{question.data.explanation&&<p dir="auto" className="whitespace-pre-wrap">{question.data.explanation}</p>}{question.data.creative_parts.sort((a,b)=>["ka","kha","ga","gha"].indexOf(a.part_key)-["ka","kha","ga","gha"].indexOf(b.part_key)).map(p=><div key={p.id} className="space-y-2 border-t border-border pt-3"><p dir="auto" className="whitespace-pre-wrap font-semibold">{p.question_text} ({p.marks.toLocaleString("bn-BD")})</p><p dir="auto" className="whitespace-pre-wrap">{p.model_answer}</p></div>)}<Button variant="outline" asChild><Link to="/admin/exams" search={{folder:question.data.folder_id,question:question.data.id}}><Pencil className="h-4 w-4"/>প্রশ্নটি সম্পাদনা করো</Link></Button></>:<p className="text-muted-foreground">প্রশ্নটি মুছে ফেলা হয়েছে</p>}</div>}
+    <div className="flex flex-wrap gap-2"><Select value={status} onValueChange={setStatus}><SelectTrigger className="w-44" aria-label="রিপোর্টের অবস্থা"><SelectValue/></SelectTrigger><SelectContent>{Object.entries(REPORT_STATUS).map(([v,label])=><SelectItem key={v} value={v}>{label}</SelectItem>)}</SelectContent></Select><Button variant="outline" disabled={busy} onClick={()=>save(false)}>অবস্থা সংরক্ষণ</Button></div>
+    <label className="block space-y-2"><span className="font-semibold">উত্তর</span><Textarea rows={6} maxLength={5000} dir="auto" value={reply} onChange={e=>setReply(e.target.value)}/></label><Button disabled={busy||!reply.trim()} onClick={()=>save(true)}><Send className="h-4 w-4"/>{busy?"পাঠানো হচ্ছে…":"উত্তর পাঠাও"}</Button>
+  </section>;
+}

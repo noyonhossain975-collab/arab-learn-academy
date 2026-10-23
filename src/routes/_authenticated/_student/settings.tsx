@@ -3,6 +3,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LogOut, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "@/components/PageHeader";
+import { StudentReports } from "@/components/StudentReports";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/_student/settings")({
   head: () => ({
@@ -42,9 +44,10 @@ function Settings() {
             <ShieldCheck className="h-5 w-5" /> অ্যাডমিন প্যানেল
           </Link>
         )}
-        <button onClick={signOut} className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-destructive py-3 font-bold text-destructive">
+        <StudentReports userId={user.id} />
+        <Button variant="outline" onClick={signOut} className="w-full border-destructive text-destructive">
           <LogOut className="h-5 w-5" /> লগ আউট
-        </button>
+        </Button>
       </div>
     </>
   );
