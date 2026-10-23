@@ -4,7 +4,7 @@ import { Flame } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
 
-export const Route = createFileRoute("/_authenticated/home")({
+export const Route = createFileRoute("/_authenticated/_student/home")({
   head: () => ({
     meta: [
       { title: "হোম — Arab learn" },

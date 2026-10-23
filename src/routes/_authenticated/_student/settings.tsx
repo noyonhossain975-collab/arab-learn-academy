@@ -1,10 +1,10 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
-import { LogOut } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { LogOut, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "@/components/PageHeader";
 
-export const Route = createFileRoute("/_authenticated/settings")({
+export const Route = createFileRoute("/_authenticated/_student/settings")({
   head: () => ({
     meta: [
       { title: "সেটিংস — Arab learn" },
@@ -22,6 +22,7 @@ function Settings() {
   const { user } = Route.useRouteContext();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const { data: isAdmin } = useQuery({ queryKey: ["is-admin"], queryFn: async () => (await supabase.rpc("is_admin")).data ?? false });
   async function signOut() {
     await qc.cancelQueries();
     qc.clear();
@@ -36,6 +37,11 @@ function Settings() {
           <p className="text-sm text-muted-foreground">ইমেইল</p>
           <p className="font-semibold">{user.email}</p>
         </div>
+        {isAdmin && (
+          <Link to="/admin" className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-primary py-3 font-bold text-primary">
+            <ShieldCheck className="h-5 w-5" /> অ্যাডমিন প্যানেল
+          </Link>
+        )}
         <button onClick={signOut} className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-destructive py-3 font-bold text-destructive">
           <LogOut className="h-5 w-5" /> লগ আউট
         </button>
