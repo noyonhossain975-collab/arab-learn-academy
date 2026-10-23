@@ -27,7 +27,7 @@ import { Route as AuthenticatedAdminLessonsRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminManagementRouteImport } from './routes/_authenticated/admin/management'
 import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated/admin/reports'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
-import { Route as AuthenticatedStudentBlogSlugRouteImport } from './routes/_authenticated/_student/blog.$slug'
+import { Route as AuthenticatedStudentBlogSlugRouteImport } from './routes/_authenticated/_student/blog_.$slug'
 import { Route as AuthenticatedStudentExamFoldersFolderIdRouteImport } from './routes/_authenticated/_student/exam-folders.$folderId'
 import { Route as AuthenticatedStudentExamFolderIdRouteImport } from './routes/_authenticated/_student/exam.$folderId'
 import { Route as AuthenticatedStudentLessonGroupsGroupIdRouteImport } from './routes/_authenticated/_student/lesson-groups.$groupId'
@@ -135,9 +135,9 @@ const AuthenticatedAdminSettingsRoute =
   } as any)
 const AuthenticatedStudentBlogSlugRoute =
   AuthenticatedStudentBlogSlugRouteImport.update({
-    id: '/$slug',
-    path: '/$slug',
-    getParentRoute: () => AuthenticatedStudentBlogRoute,
+    id: '/blog_/$slug',
+    path: '/blog/$slug',
+    getParentRoute: () => AuthenticatedStudentRouteRoute,
   } as any)
 const AuthenticatedStudentExamFoldersFolderIdRoute =
   AuthenticatedStudentExamFoldersFolderIdRouteImport.update({
@@ -175,7 +175,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
-  '/blog': typeof AuthenticatedStudentBlogRouteWithChildren
+  '/blog': typeof AuthenticatedStudentBlogRoute
   '/exams': typeof AuthenticatedStudentExamsRoute
   '/home': typeof AuthenticatedStudentHomeRoute
   '/learn': typeof AuthenticatedStudentLearnRoute
@@ -198,7 +198,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/blog': typeof AuthenticatedStudentBlogRouteWithChildren
+  '/blog': typeof AuthenticatedStudentBlogRoute
   '/exams': typeof AuthenticatedStudentExamsRoute
   '/home': typeof AuthenticatedStudentHomeRoute
   '/learn': typeof AuthenticatedStudentLearnRoute
@@ -225,7 +225,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/_student': typeof AuthenticatedStudentRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
-  '/_authenticated/_student/blog': typeof AuthenticatedStudentBlogRouteWithChildren
+  '/_authenticated/_student/blog': typeof AuthenticatedStudentBlogRoute
   '/_authenticated/_student/exams': typeof AuthenticatedStudentExamsRoute
   '/_authenticated/_student/home': typeof AuthenticatedStudentHomeRoute
   '/_authenticated/_student/learn': typeof AuthenticatedStudentLearnRoute
@@ -237,7 +237,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
-  '/_authenticated/_student/blog/$slug': typeof AuthenticatedStudentBlogSlugRoute
+  '/_authenticated/_student/blog_/$slug': typeof AuthenticatedStudentBlogSlugRoute
   '/_authenticated/_student/exam-folders/$folderId': typeof AuthenticatedStudentExamFoldersFolderIdRoute
   '/_authenticated/_student/exam/$folderId': typeof AuthenticatedStudentExamFolderIdRoute
   '/_authenticated/_student/lesson-groups/$groupId': typeof AuthenticatedStudentLessonGroupsGroupIdRoute
@@ -312,7 +312,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/reports'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/'
-    | '/_authenticated/_student/blog/$slug'
+    | '/_authenticated/_student/blog_/$slug'
     | '/_authenticated/_student/exam-folders/$folderId'
     | '/_authenticated/_student/exam/$folderId'
     | '/_authenticated/_student/lesson-groups/$groupId'
@@ -455,12 +455,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/_student/blog/$slug': {
-      id: '/_authenticated/_student/blog/$slug'
-      path: '/$slug'
+    '/_authenticated/_student/blog_/$slug': {
+      id: '/_authenticated/_student/blog_/$slug'
+      path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof AuthenticatedStudentBlogSlugRouteImport
-      parentRoute: typeof AuthenticatedStudentBlogRoute
+      parentRoute: typeof AuthenticatedStudentRouteRoute
     }
     '/_authenticated/_student/exam-folders/$folderId': {
       id: '/_authenticated/_student/exam-folders/$folderId'
@@ -500,27 +500,14 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedStudentBlogRouteChildren {
-  AuthenticatedStudentBlogSlugRoute: typeof AuthenticatedStudentBlogSlugRoute
-}
-
-const AuthenticatedStudentBlogRouteChildren: AuthenticatedStudentBlogRouteChildren =
-  {
-    AuthenticatedStudentBlogSlugRoute: AuthenticatedStudentBlogSlugRoute,
-  }
-
-const AuthenticatedStudentBlogRouteWithChildren =
-  AuthenticatedStudentBlogRoute._addFileChildren(
-    AuthenticatedStudentBlogRouteChildren,
-  )
-
 interface AuthenticatedStudentRouteRouteChildren {
-  AuthenticatedStudentBlogRoute: typeof AuthenticatedStudentBlogRouteWithChildren
+  AuthenticatedStudentBlogRoute: typeof AuthenticatedStudentBlogRoute
   AuthenticatedStudentExamsRoute: typeof AuthenticatedStudentExamsRoute
   AuthenticatedStudentHomeRoute: typeof AuthenticatedStudentHomeRoute
   AuthenticatedStudentLearnRoute: typeof AuthenticatedStudentLearnRoute
   AuthenticatedStudentMistakesRoute: typeof AuthenticatedStudentMistakesRoute
   AuthenticatedStudentSettingsRoute: typeof AuthenticatedStudentSettingsRoute
+  AuthenticatedStudentBlogSlugRoute: typeof AuthenticatedStudentBlogSlugRoute
   AuthenticatedStudentExamFoldersFolderIdRoute: typeof AuthenticatedStudentExamFoldersFolderIdRoute
   AuthenticatedStudentExamFolderIdRoute: typeof AuthenticatedStudentExamFolderIdRoute
   AuthenticatedStudentLessonGroupsGroupIdRoute: typeof AuthenticatedStudentLessonGroupsGroupIdRoute
@@ -530,12 +517,13 @@ interface AuthenticatedStudentRouteRouteChildren {
 
 const AuthenticatedStudentRouteRouteChildren: AuthenticatedStudentRouteRouteChildren =
   {
-    AuthenticatedStudentBlogRoute: AuthenticatedStudentBlogRouteWithChildren,
+    AuthenticatedStudentBlogRoute: AuthenticatedStudentBlogRoute,
     AuthenticatedStudentExamsRoute: AuthenticatedStudentExamsRoute,
     AuthenticatedStudentHomeRoute: AuthenticatedStudentHomeRoute,
     AuthenticatedStudentLearnRoute: AuthenticatedStudentLearnRoute,
     AuthenticatedStudentMistakesRoute: AuthenticatedStudentMistakesRoute,
     AuthenticatedStudentSettingsRoute: AuthenticatedStudentSettingsRoute,
+    AuthenticatedStudentBlogSlugRoute: AuthenticatedStudentBlogSlugRoute,
     AuthenticatedStudentExamFoldersFolderIdRoute:
       AuthenticatedStudentExamFoldersFolderIdRoute,
     AuthenticatedStudentExamFolderIdRoute:

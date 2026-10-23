@@ -4,7 +4,7 @@ import { LearningError, LearningPending } from "@/components/learning/LearningUI
 import { articleOptions } from "@/lib/student-settings";
 import { learningHead } from "@/lib/learning";
 
-export const Route = createFileRoute("/_authenticated/_student/blog/$slug")({
+export const Route = createFileRoute("/_authenticated/_student/blog_/$slug")({
   loader: ({ context, params }) => context.queryClient.fetchQuery(articleOptions(params.slug)),
   head: ({ loaderData }) => {
     const head = learningHead(loaderData?.title ?? "লেখা পাওয়া যায়নি", "Arab learn-এর শিক্ষামূলক আর্টিকেল পড়ুন।");
