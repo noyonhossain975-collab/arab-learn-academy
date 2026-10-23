@@ -19,8 +19,10 @@ import { Route as AuthenticatedStudentExamsRouteImport } from './routes/_authent
 import { Route as AuthenticatedStudentHomeRouteImport } from './routes/_authenticated/_student/home'
 import { Route as AuthenticatedStudentLearnRouteImport } from './routes/_authenticated/_student/learn'
 import { Route as AuthenticatedStudentSettingsRouteImport } from './routes/_authenticated/_student/settings'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminExamsRouteImport } from './routes/_authenticated/admin/exams'
 import { Route as AuthenticatedAdminLessonsRouteImport } from './routes/_authenticated/admin/lessons'
+import { Route as AuthenticatedAdminManagementRouteImport } from './routes/_authenticated/admin/management'
 import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated/admin/reports'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
 
@@ -77,6 +79,11 @@ const AuthenticatedStudentSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedStudentRouteRoute,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 const AuthenticatedAdminExamsRoute = AuthenticatedAdminExamsRouteImport.update({
   id: '/exams',
   path: '/exams',
@@ -86,6 +93,12 @@ const AuthenticatedAdminLessonsRoute =
   AuthenticatedAdminLessonsRouteImport.update({
     id: '/lessons',
     path: '/lessons',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminManagementRoute =
+  AuthenticatedAdminManagementRouteImport.update({
+    id: '/management',
+    path: '/management',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminReportsRoute =
@@ -112,22 +125,25 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedStudentSettingsRoute
   '/admin/exams': typeof AuthenticatedAdminExamsRoute
   '/admin/lessons': typeof AuthenticatedAdminLessonsRoute
+  '/admin/management': typeof AuthenticatedAdminManagementRoute
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/exams': typeof AuthenticatedStudentExamsRoute
   '/home': typeof AuthenticatedStudentHomeRoute
   '/learn': typeof AuthenticatedStudentLearnRoute
   '/settings': typeof AuthenticatedStudentSettingsRoute
   '/admin/exams': typeof AuthenticatedAdminExamsRoute
   '/admin/lessons': typeof AuthenticatedAdminLessonsRoute
+  '/admin/management': typeof AuthenticatedAdminManagementRoute
   '/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,8 +159,10 @@ export interface FileRoutesById {
   '/_authenticated/_student/settings': typeof AuthenticatedStudentSettingsRoute
   '/_authenticated/admin/exams': typeof AuthenticatedAdminExamsRoute
   '/_authenticated/admin/lessons': typeof AuthenticatedAdminLessonsRoute
+  '/_authenticated/admin/management': typeof AuthenticatedAdminManagementRoute
   '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -159,22 +177,25 @@ export interface FileRouteTypes {
     | '/settings'
     | '/admin/exams'
     | '/admin/lessons'
+    | '/admin/management'
     | '/admin/reports'
     | '/admin/settings'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/reset-password'
-    | '/admin'
     | '/exams'
     | '/home'
     | '/learn'
     | '/settings'
     | '/admin/exams'
     | '/admin/lessons'
+    | '/admin/management'
     | '/admin/reports'
     | '/admin/settings'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -189,8 +210,10 @@ export interface FileRouteTypes {
     | '/_authenticated/_student/settings'
     | '/_authenticated/admin/exams'
     | '/_authenticated/admin/lessons'
+    | '/_authenticated/admin/management'
     | '/_authenticated/admin/reports'
     | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -272,6 +295,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentSettingsRouteImport
       parentRoute: typeof AuthenticatedStudentRouteRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/exams': {
       id: '/_authenticated/admin/exams'
       path: '/exams'
@@ -284,6 +314,13 @@ declare module '@tanstack/react-router' {
       path: '/lessons'
       fullPath: '/admin/lessons'
       preLoaderRoute: typeof AuthenticatedAdminLessonsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/management': {
+      id: '/_authenticated/admin/management'
+      path: '/management'
+      fullPath: '/admin/management'
+      preLoaderRoute: typeof AuthenticatedAdminManagementRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/reports': {
@@ -326,16 +363,20 @@ const AuthenticatedStudentRouteRouteWithChildren =
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminExamsRoute: typeof AuthenticatedAdminExamsRoute
   AuthenticatedAdminLessonsRoute: typeof AuthenticatedAdminLessonsRoute
+  AuthenticatedAdminManagementRoute: typeof AuthenticatedAdminManagementRoute
   AuthenticatedAdminReportsRoute: typeof AuthenticatedAdminReportsRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminExamsRoute: AuthenticatedAdminExamsRoute,
     AuthenticatedAdminLessonsRoute: AuthenticatedAdminLessonsRoute,
+    AuthenticatedAdminManagementRoute: AuthenticatedAdminManagementRoute,
     AuthenticatedAdminReportsRoute: AuthenticatedAdminReportsRoute,
     AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+    AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }
 
 const AuthenticatedAdminRouteRouteWithChildren =
