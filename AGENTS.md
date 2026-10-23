@@ -23,3 +23,4 @@
 - Admin leaf routes use shared metadata defaults with distinct page titles and descriptions so private administration pages have complete, consistent head tags.
 - Reports share a reusable submission dialog and owner-scoped student list; admin triage uses RLS and invalidates report/badge queries after replies, while a database trigger restricts student updates to read state.
 - Site settings are split into contacts, WhatsApp and blog editors; only named non-secret payment settings are editable, and contact links use protocol validation before rendering.
+- Student learning uses distinct group, lesson and vocabulary routes with shared query options; lesson titles come from the lock-aware RPC and content stays RLS-filtered. Completion uses an atomic idempotent RPC; the last opened lesson is a user-scoped browser shortcut, not access authority.

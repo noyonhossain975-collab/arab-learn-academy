@@ -1,7 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageHeader, ComingSoon } from "@/components/PageHeader";
+import { LearningCatalog } from "@/components/learning/LearningCatalog";
+import { LearningPending,LearningError } from "@/components/learning/LearningUI";
+import { catalogOptions } from "@/lib/learning";
 
 export const Route = createFileRoute("/_authenticated/_student/learn")({
+  loader: ({context})=>context.queryClient.ensureQueryData(catalogOptions(context.user.id)),
+  pendingComponent: LearningPending,
+  errorComponent: LearningError,
   head: () => ({
     meta: [
       { title: "লেসন — Arab learn" },
@@ -12,10 +17,6 @@ export const Route = createFileRoute("/_authenticated/_student/learn")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: () => (
-    <>
-      <PageHeader title="লেসন" />
-      <ComingSoon text="পাঠ ও শব্দভান্ডার শীঘ্রই আসছে।" />
-    </>
-  ),
+  component: Learn,
 });
+function Learn(){const {user}=Route.useRouteContext();return <LearningCatalog userId={user.id}/>;}
