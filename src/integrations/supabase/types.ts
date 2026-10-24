@@ -259,6 +259,7 @@ export type Database = {
           finished_at: string | null
           folder_id: string | null
           id: string
+          question_ids: string[] | null
           score: number
           started_at: string
           total: number
@@ -268,6 +269,7 @@ export type Database = {
           finished_at?: string | null
           folder_id?: string | null
           id?: string
+          question_ids?: string[] | null
           score?: number
           started_at?: string
           total?: number
@@ -277,6 +279,7 @@ export type Database = {
           finished_at?: string | null
           folder_id?: string | null
           id?: string
+          question_ids?: string[] | null
           score?: number
           started_at?: string
           total?: number
@@ -1012,7 +1015,12 @@ export type Database = {
         }
         Returns: boolean
       }
-      start_exam: { Args: { p_folder_id: string }; Returns: string }
+      start_exam:
+        | { Args: { p_folder_id: string }; Returns: string }
+        | {
+            Args: { p_folder_id: string; p_question_ids: string[] }
+            Returns: string
+          }
       touch_last_seen: { Args: never; Returns: undefined }
     }
     Enums: {
