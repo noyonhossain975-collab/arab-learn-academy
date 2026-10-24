@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Flame, Star, BookmarkX, BookOpen, TrendingDown, ChevronRight } from "lucide-react";
-import { Logo } from "@/components/Logo";
 import { LearningPending, LearningError } from "@/components/learning/LearningUI";
 import { dashboardOptions } from "@/lib/dashboard";
 
@@ -31,8 +30,7 @@ function Home() {
   useEffect(() => { try { const v = localStorage.getItem(`arab-learn:last-lesson:${user.id}`); if (v) setLast(JSON.parse(v) as LastLesson); } catch { /* optional shortcut */ } }, [user.id]);
   return (
     <div className="space-y-5 px-5 py-5">
-      <div className="flex items-center justify-between">
-        <Logo className="justify-start" />
+      <div className="flex items-center justify-end">
         <div className="flex items-center gap-1 rounded-full bg-secondary px-3 py-1 font-bold text-secondary-foreground" aria-label="স্ট্রিক"><Flame className="h-5 w-5 text-chart-3" /> {bn(data.streak)}</div>
       </div>
       <div className="rounded-3xl bg-primary p-6 text-primary-foreground">
