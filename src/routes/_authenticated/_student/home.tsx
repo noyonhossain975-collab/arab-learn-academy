@@ -164,7 +164,7 @@ function Home() {
             <div className="mt-3 flex justify-between">{data.week.map((d) => <div key={d.date} className="flex flex-col items-center gap-1"><span className={`h-7 w-7 rounded-full ${d.questions || d.lessons ? "bg-primary" : "bg-muted"}`} /><span className="text-[10px] text-muted-foreground">{d.label}</span></div>)}</div>
             <p className="mt-4 text-sm">মোট পয়েন্ট: <span className="font-bold text-primary">{bn(data.totalPoints)}</span></p>
           </section>
-          <section className="rounded-3xl border-2 bg-card p-5 md:p-6">
+          <section className="rounded-3xl border-2 bg-card p-4 max-md:order-6 md:p-6">
             <h2 className="mb-3 flex items-center gap-2 text-lg font-bold"><TrendingDown className="h-5 w-5 text-destructive" />দুর্বল বিষয়</h2>
             {data.weak.length ? <div className="space-y-2">{data.weak.map(w => <Link key={w.folder_id} to="/exam-folders/$folderId" params={{ folderId: w.folder_id }} className="flex items-center gap-3 rounded-xl bg-muted p-3">
               <span dir="auto" className="min-w-0 flex-1 truncate font-semibold">{w.title}</span><span className="text-sm font-bold text-destructive">{bn(Math.round(w.accuracy * 100))}%</span><span className="text-sm text-primary">অনুশীলন</span></Link>)}</div>
