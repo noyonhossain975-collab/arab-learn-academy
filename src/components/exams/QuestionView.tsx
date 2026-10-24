@@ -15,7 +15,7 @@ export function QuestionView({ q, results, onSubmit, review = false, singlePart 
   const mcq = results[answerKey(q.id)];
   return (
     <div dir="ltr" className="min-w-0 space-y-4 break-words text-left">
-      <p dir="ltr" className="whitespace-pre-wrap text-left text-lg font-semibold leading-relaxed">{q.question_text}</p>
+      <p dir="ltr" className={cn("whitespace-pre-wrap text-left font-semibold leading-relaxed", q.type === "mcq" ? "text-xl md:text-2xl" : "text-lg")}>{q.question_text}</p>
       {q.image_url && <img src={q.image_url} alt="" loading="lazy" className="max-h-72 rounded-lg" />}
       {q.type === "mcq" ? (
         <div className="space-y-2">
@@ -24,7 +24,7 @@ export function QuestionView({ q, results, onSubmit, review = false, singlePart 
             return <Button variant="outline" key={o.id} type="button" disabled={!!mcq || busy || review} onClick={() => run({ optionId: o.id })} dir="ltr"
               className={cn("h-auto w-full items-center gap-3 whitespace-normal rounded-lg border-2 p-4 text-left disabled:opacity-100", !show && "hover:border-primary",
                 show && o.is_correct && "border-primary bg-primary/10", show && chosen && !o.is_correct && "border-destructive bg-destructive/10")}>
-              <span dir="ltr" className="min-w-0 flex-1 whitespace-pre-wrap break-words text-left">{o.option_text}</span>
+              <span dir="ltr" className="min-w-0 flex-1 whitespace-pre-wrap break-words text-left text-lg leading-relaxed md:text-xl">{o.option_text}</span>
               {show && o.is_correct && <Check className="h-5 w-5 text-primary" />}{show && chosen && !o.is_correct && <X className="h-5 w-5 text-destructive" />}
             </Button>;
           })}
