@@ -1,10 +1,10 @@
 import { Extension } from "@tiptap/core";
-import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
+import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import { Table, TableCell, TableHeader, TableRow } from "@tiptap/extension-table";
 import { Bold, Heading2, Heading3, ImagePlus, Italic, List, ListOrdered, Pilcrow, Table as TableIcon, Trash2 } from "lucide-react";
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { uploadContentImage } from "@/lib/upload";
 
@@ -30,32 +30,36 @@ const Direction = Extension.create({
 export function RichEditor({ value, onChange, folder = "lessons" }: { value: string; onChange: (html: string) => void; folder?: string }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [, setTick] = useState(0);
+  const bump = () => setTick((t) => t + 1);
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [StarterKit, Image, Table.configure({ resizable: false }), TableRow, TableHeader, TableCell, Direction],
     content: value,
     editorProps: { attributes: { class: "lesson-content min-h-80 px-4 py-3 focus:outline-none" } },
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
+    onTransaction: bump,
+    onSelectionUpdate: bump,
   });
 
-  const state = useEditorState({
-    editor,
-    selector: ({ editor: e }) =>
-      e
-        ? {
-            h2: e.isActive("heading", { level: 2 }),
-            h3: e.isActive("heading", { level: 3 }),
-            bold: e.isActive("bold"),
-            italic: e.isActive("italic"),
-            ul: e.isActive("bulletList"),
-            ol: e.isActive("orderedList"),
-            rtl: e.getAttributes("paragraph")["dir"] === "rtl" || e.getAttributes("heading")["dir"] === "rtl",
-            table: e.isActive("table"),
-          }
-        : null,
-  });
+  useEffect(() => {
+    if (editor && !editor.isDestroyed && value !== editor.getHTML()) {
+      editor.commands.setContent(value, { emitUpdate: false });
+    }
+  }, [editor, value]);
 
-  if (!editor || !state) return <div className="h-96 animate-pulse rounded-lg border border-input bg-muted" />;
+  if (!editor) return <div className="h-96 animate-pulse rounded-lg border border-input bg-muted" />;
+
+  const state = {
+    h2: editor.isActive("heading", { level: 2 }),
+    h3: editor.isActive("heading", { level: 3 }),
+    bold: editor.isActive("bold"),
+    italic: editor.isActive("italic"),
+    ul: editor.isActive("bulletList"),
+    ol: editor.isActive("orderedList"),
+    rtl: editor.getAttributes("paragraph")["dir"] === "rtl" || editor.getAttributes("heading")["dir"] === "rtl",
+    table: editor.isActive("table"),
+  };
 
   const toggleRtl = () => {
     const next = state.rtl ? null : "rtl";
