@@ -23,7 +23,7 @@ describe("weekly series", () => {
   it("returns 7 days ending today with zeros for missing days", () => {
     const w = weekSeries([{ activity_date: "2026-10-23", points: 12, lessons_completed: 1, questions_answered: 4 }, { activity_date: "2026-10-10", points: 99, lessons_completed: 0, questions_answered: 9 }], "2026-10-23");
     expect(w).toHaveLength(7);
-    expect(w[0].date).toBe("2026-10-17");
+    expect(w[0]?.date).toBe("2026-10-17");
     expect(w[6]).toMatchObject({ date: "2026-10-23", points: 12, questions: 4, lessons: 1 });
     expect(w.reduce((s, d) => s + d.points, 0)).toBe(12);
   });

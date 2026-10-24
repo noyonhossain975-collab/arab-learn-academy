@@ -46,6 +46,7 @@ function Announcements() {
   useEffect(() => { if (list.length < 2) return; const t = setInterval(() => setI((v) => (v + 1) % list.length), 7000); return () => clearInterval(t); }, [list.length]);
   if (!list.length) return null;
   const a = list[i % list.length];
+  if (!a) return null;
   const k = kinds[a.kind as keyof typeof kinds] ?? kinds.update;
   const safe = a.link_url && /^(https?:\/\/|\/(?!\/))/.test(a.link_url) ? a.link_url : null;
   return (
