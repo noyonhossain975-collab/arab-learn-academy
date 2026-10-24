@@ -37,7 +37,7 @@ export function MistakesList({ userId }: { userId: string }) {
     {rows.map(m => <div key={m.id} className="rounded-lg border p-4">
       <p className="mb-2 text-xs text-muted-foreground">{subjectOf(m.question.folder_id)} · {m.times_wrong.toLocaleString("bn-BD")} বার ভুল</p>
       {practice === m.id ? <Practice q={m.question} userId={userId} onDone={() => setPractice(undefined)} /> : <>
-        <p dir="auto" className="line-clamp-3 whitespace-pre-wrap font-semibold">{m.question.question_text}</p>
+        <p dir="ltr" className="text-left line-clamp-3 whitespace-pre-wrap font-semibold">{m.question.question_text}</p>
         <Button size="sm" className="mt-3" variant={m.is_resolved ? "outline" : "default"} onClick={() => setPractice(m.id)}><RotateCcw className="h-4 w-4" />আবার অনুশীলন</Button>
       </>}
     </div>)}
