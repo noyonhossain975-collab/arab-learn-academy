@@ -90,11 +90,11 @@ function Home() {
   const goal = 7;
   const metrics = { points: "পয়েন্ট", questions: "প্রশ্ন", lessons: "পাঠ" } as const;
   return (
-    <div className="space-y-6 px-5 py-5 md:space-y-8 md:px-8 md:py-8">
-      <Announcements />
+    <div className="flex flex-col gap-4 px-4 py-4 md:gap-8 md:px-8 md:py-8">
+      <div className="max-md:order-3"><Announcements /></div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-        <div className="flex flex-col justify-between gap-4 rounded-3xl bg-primary p-6 text-primary-foreground md:p-8">
+      <div className="grid gap-4 max-md:order-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+        <div className="hidden flex-col justify-between md:flex gap-4 rounded-3xl bg-primary p-6 text-primary-foreground md:p-8">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-lg">আসসালামু আলাইকুম,</p>
@@ -115,29 +115,30 @@ function Home() {
         </div>
       </div>
 
-      <section>
+      <section className="max-md:order-5">
         <h2 className="mb-3 text-xl font-bold md:text-2xl">কী শিখবেন আজ?</h2>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 xl:grid-cols-5">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-4 xl:grid-cols-5">
           {features.map((f) => (
-            <Link key={f.to} to={f.to} className="group rounded-2xl border-2 bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary md:p-5">
-              <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-2xl ${f.tone}`}><f.icon className="h-6 w-6" /></div>
-              <p className="font-bold">{f.title}</p>
-              <p className="mt-1 text-xs text-muted-foreground md:text-sm">{f.text}</p>
-              {f.to === "/mistakes" && data.mistakes > 0 && <p className="mt-2 text-xs font-bold text-destructive">{bn(data.mistakes)}টি বাকি</p>}
+            <Link key={f.to} to={f.to} className="group flex items-center gap-3 rounded-2xl border-2 bg-card px-3 py-2.5 transition-all hover:border-primary md:block md:p-5 md:hover:-translate-y-0.5">
+              <div className={`flex h-10 w-10 shrink-0 md:mb-3 md:h-12 md:w-12 items-center justify-center rounded-2xl ${f.tone}`}><f.icon className="h-6 w-6" /></div>
+              <div className="min-w-0 flex-1"><p className="font-bold">{f.title}</p>
+              <p className="truncate text-xs text-muted-foreground md:mt-1 md:whitespace-normal md:text-sm">{f.text}</p></div>
+              {f.to === "/mistakes" && data.mistakes > 0 && <p className="shrink-0 text-xs font-bold text-destructive md:mt-2">{bn(data.mistakes)}টি বাকি</p>}
+              <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground md:hidden" />
             </Link>
           ))}
         </div>
       </section>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <section className="rounded-3xl border-2 bg-card p-5 md:p-6">
+      <div className="grid gap-4 max-md:contents lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <section className="rounded-3xl border-2 bg-card p-4 max-md:order-1 md:p-6">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div><h2 className="text-xl font-bold">সাপ্তাহিক অগ্রগতি</h2><p className="text-sm text-muted-foreground">গত ৭ দিনের পড়াশোনা</p></div>
             <div className="flex rounded-xl bg-muted p-1" role="tablist">
               {(Object.keys(metrics) as (keyof typeof metrics)[]).map((m) => <button key={m} type="button" role="tab" aria-selected={metric === m} onClick={() => setMetric(m)} className={`rounded-lg px-3 py-1 text-sm font-semibold ${metric === m ? "bg-background text-primary shadow-sm" : "text-muted-foreground"}`}>{metrics[m]}</button>)}
             </div>
           </div>
-          <div className="h-64 md:h-72">
+          <div className="h-52 md:h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.week} margin={{ left: -20, right: 4, top: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
@@ -155,8 +156,8 @@ function Home() {
           </div>
         </section>
 
-        <div className="space-y-4">
-          <section className="rounded-3xl border-2 bg-card p-5 md:p-6">
+        <div className="space-y-4 max-md:contents">
+          <section className="rounded-3xl border-2 bg-card p-4 max-md:order-2 md:p-6">
             <h2 className="mb-1 flex items-center gap-2 text-lg font-bold"><CalendarCheck className="h-5 w-5 text-primary" />এই সপ্তাহের লক্ষ্য</h2>
             <p className="text-sm text-muted-foreground">{bn(goal)} দিনের মধ্যে {bn(data.activeDays)} দিন পড়েছেন</p>
             <div className="mt-3 h-3 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(data.activeDays / goal) * 100}%` }} /></div>
