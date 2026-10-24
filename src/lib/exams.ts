@@ -21,6 +21,20 @@ export function normalize(q: ExamQuestion): ExamQuestion {
 }
 export function isLocked(folder: Pick<ExamFolder, "is_free">, premium: boolean) { return !folder.is_free && !premium; }
 
+export function mcqCountChoices(available: number) {
+  return [10, 15].filter(count => count < available).concat(available > 0 ? [available] : []);
+}
+export function validMcqCount(count: number, available: number) {
+  return Number.isInteger(count) && count >= 1 && count <= available;
+}
+/** Keep the author's order and include every creative question in mixed folders. */
+export function selectExamQuestions(questions: ExamQuestion[], count: number) {
+  const available = questions.filter(q => q.type === "mcq").length;
+  if (!validMcqCount(count, available)) throw new Error("প্রশ্নের সংখ্যা সঠিক নয়");
+  let included = 0;
+  return questions.filter(q => q.type !== "mcq" || included++ < count);
+}
+
 export const examTreeOptions = (userId: string) => queryOptions({
   queryKey: ["exams", "tree", userId], queryFn: async () => {
     const [folders, premium] = await Promise.all([
