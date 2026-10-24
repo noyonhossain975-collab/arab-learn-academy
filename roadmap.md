@@ -1,5 +1,5 @@
 # Current phase: 8 — Final polish and documentation
-- [ ] Increase MCQ text size, center the question area, and add a pre-exam question-count dialog with verified subset scoring.
+- [x] Increase MCQ text size, center the question area, and add a pre-exam question-count dialog; subset-total rules pass tests and sample browser flows pass at mobile/desktop. Real signed-in scoring check remains blocked by external unmanaged auth below.
 - [x] Polish public login/reset/error screens, safe-area student navigation, long question wrapping and admin error states.
 - [x] Complete Google sign-in button and safe public return handling.
 - [x] All 36 tests pass; public login/signup/reset/404 checked at desktop and 360px without runtime errors or overflow.
