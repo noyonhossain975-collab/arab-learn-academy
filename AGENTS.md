@@ -28,3 +28,4 @@
 - Student settings use shared user-scoped profile/premium queries and a root theme controller; WhatsApp links use current admin settings without granting subscriptions, while profile photos use owner-only private Storage paths.
 - Student blog reading lives in distinct list/detail routes and fetches only published posts; detail content is sanitized before rendering.
 - External Supabase Google OAuth and email confirmations return to the public auth page; session hydration navigates to the fixed student home destination to avoid protected callback loops and open redirects.
+- Announcements live in public.announcements (admin-managed via RLS + is_admin(), students read active rows); rendered as a rotating banner on student home — one place for updates.
